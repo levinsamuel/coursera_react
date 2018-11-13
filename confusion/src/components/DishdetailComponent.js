@@ -48,8 +48,8 @@ class DishDetail extends Component {
           console.debug("date value: ", comm.date)
           const dt = new Date(comm.date);
           return (
-              <div key={comm.id}>
-                <li className="mt-2">{comm.comment}</li>
+              <div key={comm.id} className="mt-2">
+                <li className="">{comm.comment}</li>
                 <li className="mt-1">-- {comm.author}, {dt.toLocaleDateString()}</li>
               </div>
           );
