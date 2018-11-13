@@ -14,27 +14,56 @@ class DishDetail extends Component {
       return (
         <div className="row">
           <div className="col-12 col-md-5 m-1">
-            <Card>
-              <CardImg width="100%" src={this.props.dish.image} alt={this.props.dish.name} />
-              <CardBody>
-                <CardTitle heading>{this.props.dish.name}</CardTitle>
-                <CardText>{this.props.dish.description}</CardText>
-              </CardBody>
-            </Card>
+            {this.renderDish(this.props.dish)}
           </div>
           <div className="col-12 col-md-5 m-1">
-            <Card>
-              <CardImg width="100%" src={this.props.dish.image} alt={this.props.dish.name} />
-              <CardBody>
-                <CardTitle heading>{this.props.dish.name}</CardTitle>
-                <CardText>{this.props.dish.description}</CardText>
-              </CardBody>
-            </Card>
+            {this.renderComments(this.props.dish.comments)}
           </div>
         </div>
       );
     } else {
       return (<div></div>);
+    }
+  }
+
+  renderDish(dish) {
+    return (
+      <div>
+        <Card>
+          <CardImg width="100%" src={dish.image} alt={dish.name} />
+          <CardBody>
+            <CardTitle heading="true">{dish.name}</CardTitle>
+            <CardText>{dish.description}</CardText>
+          </CardBody>
+        </Card>
+      </div>
+    )
+  }
+
+  renderComments(comments) {
+
+    if (comments) {
+
+      const commsRender = comments.map((comm) => {
+          console.debug("date value: ", comm.date)
+          const dt = new Date(comm.date);
+          return (
+              <div key={comm.id}>
+                <li className="mt-2">{comm.comment}</li>
+                <li className="mt-1">-- {comm.author}, {dt.toLocaleDateString()}</li>
+              </div>
+          );
+      });
+      return (
+        <div className="text-left">
+          <h4>Comments</h4>
+          <ul className="list-unstyled">
+            {commsRender}
+          </ul>
+        </div>
+      )
+    } else {
+      return (<div></div>)
     }
   }
 };
