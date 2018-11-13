@@ -10,6 +10,8 @@ class Menu extends Component {
     this.state = {
       selectedDish: null
     }
+
+    this.onDishSelect = this.onDishSelect.bind(this);
   }
 
   render() {
@@ -32,7 +34,7 @@ class Menu extends Component {
           {menu}
         </div>
         <div className="row">
-            <DishDetail dish={this.state.selectedDish} />
+          <DishDetail dish={this.state.selectedDish} />
         </div>
       </div>
 
@@ -43,21 +45,6 @@ class Menu extends Component {
     this.setState({selectedDish: dish});
   }
 
-  renderDish(dish) {
-    if (dish) {
-      return (
-        <Card>
-          <CardImg width="100%" src={dish.image} alt={dish.name} />
-          <CardBody>
-            <CardTitle heading>{dish.name}</CardTitle>
-            <CardText>{dish.description}</CardText>
-          </CardBody>
-        </Card>
-        );
-    } else {
-      return (<div></div>);
-    }
-  }
 }
 
 export default Menu;
