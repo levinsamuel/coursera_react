@@ -27,23 +27,20 @@ class Main extends Component {
 
   render() {
 
-    const HomePage = () => {
-      return (
-          <Home
-            dish={this.state.dishes.filter((dish) => dish.featured)[0]}
-            promotion={this.state.promotions.filter((p) => p.featured)[0]}
-            leader={this.state.leaders.filter((l) => l.featured)[0]}
-            />
-      );
-    }
+    const HomePage = () => (
+        <Home
+          dish={this.state.dishes.filter((dish) => dish.featured)[0]}
+          promotion={this.state.promotions.filter((p) => p.featured)[0]}
+          leader={this.state.leaders.filter((l) => l.featured)[0]}
+          />
+      )
 
-    const DishWithId = ({match}) => {
 
-        return (
-          <DishDetail dish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishid))[0]}
-              comments={this.state.comments.filter((comm) => comm.dishId === parseInt(match.params.dishid))} />
-        );
-    }
+    const DishWithId = ({match}) => (
+        <DishDetail dish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishid))[0]}
+            comments={this.state.comments.filter((comm) => comm.dishId === parseInt(match.params.dishid))} />
+      )
+
 
     return (
       <div className="Main">
@@ -55,7 +52,9 @@ class Main extends Component {
             } />
           <Route path="/menu/:dishid" component={DishWithId} />
           <Route path="/contactus" component={Contact} />
-          <Route path="/aboutus" component={About} />
+          <Route path="/aboutus" component={
+            () => <About leaders={this.state.leaders}/>
+            } />
           <Redirect to="/home" />
         </Switch>
         <Footer/>

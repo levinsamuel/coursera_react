@@ -4,12 +4,7 @@ import { Link } from 'react-router-dom';
 
 function About(props) {
 
-    const leaders = null;
-    // const leaders = props.leaders.map((leader) => {
-    //     return (
-    //         <p>Leader {leader.name}</p>
-    //     );
-    // });
+    const leaders = props.leaders.map(leader => (<RenderLeader leader={leader} />));
 
     return(
         <div className="container">
@@ -72,6 +67,24 @@ function About(props) {
                 </div>
             </div>
         </div>
+    );
+}
+
+const RenderLeader = (props) => {
+
+    return (
+      <div>
+        <Media tag="li">
+          <Media left>
+            <Media object className="mr-3" src={props.leader.image} alt={props.leader.name}/>
+          </Media>
+          <Media body>
+            <Media heading>{props.leader.name}</Media>
+            <h5 className="mt-0">{props.leader.designation}</h5>
+            <p>{props.leader.description}</p>
+          </Media>
+        </Media>
+      </div>
     );
 }
 
