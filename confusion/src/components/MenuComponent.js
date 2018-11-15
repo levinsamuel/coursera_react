@@ -1,57 +1,50 @@
 import React, {Component} from 'react';
-import {Card, CardImg, CardImgOverlay, CardTitle} from 'reactstrap';
+import {Card, CardImg, CardImgOverlay, CardTitle, Breadcrumb, BreadcrumbItem} from 'reactstrap';
 import DishDetail from './DishdetailComponent';
+import {Link} from 'react-router-dom';
 
-class Menu extends Component {
+const Menu = props => {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      dish: null,
-      comments: null
-    }
-  }
-
-  render() {
-
-    const menu = this.props.dishes.map((dish) => {
-      return (
-        <div key={dish.id} className="col-12 col-md-5 m-1">
-          <RenderMenuItem dish={dish} onClick={() => this.onClick(dish.id)} />
-        </div>
-      )
-    });
+  const menu = props.dishes.map((dish) => {
     return (
-      <div className="container">
-        <div className="row">
-          {menu}
-        </div>
-        <div className="row">
-          <DishDetail dish={this.state.dish} comments={this.state.comments} />
+      <div key={dish.id} className="col-12 col-md-5 m-1">
+        <RenderMenuItem dish={dish} />
+      </div>
+    )
+  });
+  return (
+    <div className="container">
+      <div className="row">
+        <Breadcrumb>
+          <BreadcrumbItem><Link to='/home'>Home</Link></BreadcrumbItem>
+          <BreadcrumbItem active>Menu</BreadcrumbItem>
+        </Breadcrumb>
+        <div className="col-12">
+          <h3>Menu</h3>
         </div>
       </div>
-    );
-  }
-
-
-  onClick(dishId) {
-
-    this.setState({
-      dish: this.props.dishes.filter((dish) => dish.id === dishId)[0],
-      comments: this.props.comments.filter((comm) => comm.dishId === dishId)
-    });
-  }
-
+      <div className="row">
+        {menu}
+      </div>
+      <div className="row">
+        <DishDetail dish={props.dish} comments={props.comments} />
+      </div>
+    </div>
+  );
 }
 
-function RenderMenuItem({dish, onClick}) {
+
+
+function RenderMenuItem({dish}) {
 
   return (
-    <Card onClick={() => onClick(dish.id)}>
-      <CardImg width="100%" src={dish.image} alt={dish.name} />
-      <CardImgOverlay >
-        <CardTitle heading="true">{dish.name}</CardTitle>
-      </CardImgOverlay>
+    <Card>
+      <Link to={`/menu/${dish.id}`}>
+        <CardImg width="100%" src={dish.image} alt={dish.name} />
+        <CardImgOverlay >
+          <CardTitle heading="true">{dish.name}</CardTitle>
+        </CardImgOverlay>
+      </Link>
     </Card>
     );
 }
