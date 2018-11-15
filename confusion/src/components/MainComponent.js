@@ -5,6 +5,7 @@ import Footer from './FooterComponent';
 import Contact from './ContactComponent';
 import DishDetail from './DishdetailComponent'
 import Menu from './MenuComponent';
+import About from './AboutComponent';
 import {DISHES} from '../shared/dishes';
 import {COMMENTS} from '../shared/comments';
 import {PROMOTIONS} from '../shared/promotions';
@@ -54,6 +55,7 @@ class Main extends Component {
             } />
           <Route path="/menu/:dishid" component={DishWithId} />
           <Route path="/contactus" component={Contact} />
+          <Route path="/aboutus" component={About} />
           <Redirect to="/home" />
         </Switch>
         <Footer/>
