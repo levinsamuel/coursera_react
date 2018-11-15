@@ -11,7 +11,7 @@ const DishDetail = props => {
           <RenderDish dish={props.dish}/>
         </div>
         <div className="col-12 col-md-5 m-1">
-          <RenderComments comments={props.dish.comments}/>
+          <RenderComments comments={props.comments}/>
         </div>
       </div>
     );
@@ -43,7 +43,7 @@ function RenderComments({comments}) {
         const dt = new Date(comm.date);
         return (
             <div key={comm.id} className="mt-2">
-              <li className="">{comm.comment}</li>
+              <li className="">{comm.id}: {comm.comment}</li>
               <li className="mt-1">-- {comm.author}, {dt.toLocaleDateString()}</li>
             </div>
         );
