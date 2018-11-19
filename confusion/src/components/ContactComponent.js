@@ -71,26 +71,23 @@ class Contact extends Component {
                 <h3>Send us your feedback</h3>
               </div>
               <div className="col-12 col-md-9">
-                <Form onSubmit={this.handleSubmit}>
+                <Form onSubmit={this.handleSubmit} onChange={this.handleInputChange}
+                    onBlur={this.handleBlur}>
 
                   <ValidatedInput field="firstname" value={this.state.firstname}
-                      type="text" name="First Name" handleBlur={this.handleBlur}
-                      handleInputChange={this.handleInputChange}
+                      type="text" name="First Name"
                       errors={errors} />
 
                   <ValidatedInput field="lastname" value={this.state.lastname}
-                      type="text" name="Last Name" handleBlur={this.handleBlur}
-                      handleInputChange={this.handleInputChange}
+                      type="text" name="Last Name"
                       errors={errors} />
 
                   <ValidatedInput field="telnum" value={this.state.telnum}
-                      type="tel" name="Tel. Number" handleBlur={this.handleBlur}
-                      handleInputChange={this.handleInputChange}
+                      type="tel" name="Tel. Number"
                       errors={errors} />
 
                   <ValidatedInput field="email" value={this.state.email}
-                      type="email" name="Email" handleBlur={this.handleBlur}
-                      handleInputChange={this.handleInputChange}
+                      type="email" name="Email"
                       errors={errors} />
 
                   <FormGroup row>
@@ -135,10 +132,16 @@ class Contact extends Component {
     );
   }
 
-  handleInputChange(event) {
+  decompEvent(event) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
+    return {target, value, name}
+  }
+
+  handleInputChange(event) {
+    console.debug('handle input change', event)
+    const {value, name} = this.decompEvent(event)
     console.debug("Target val, name: ", value, name);
 
     this.setState({
@@ -152,9 +155,12 @@ class Contact extends Component {
     event.preventDefault();
   }
 
-  handleBlur (field, event) {
+  handleBlur (event) {
+
+    console.debug('handle blur', event)
+    const {value, name} = this.decompEvent(event)
     this.setState({
-      touched: { ...this.state.touched, [field]:true}
+      touched: { ...this.state.touched, [name]:true}
     });
   }
 
@@ -183,9 +189,7 @@ const ValidatedInput = props => {
       <Label htmlFor={props.field} md={2}>{props.name}</Label>
       <Col md={10}>
         <Input type={props.type} id={props.field} name={props.field}
-            placeholder={props.name} value={props.value}
-            onChange={props.handleInputChange}
-            onBlur={() => props.handleBlur(props.field)}
+            placeholder={props.name}
             valid={error === ''}
             invalid={error !== ''}/>
         <FormFeedback>{error}</FormFeedback>
