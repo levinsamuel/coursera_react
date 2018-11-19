@@ -156,7 +156,6 @@ class Contact extends Component {
   }
 
   handleBlur (event) {
-
     console.debug('handle blur', event)
     const {value, name} = this.decompEvent(event)
     this.setState({
