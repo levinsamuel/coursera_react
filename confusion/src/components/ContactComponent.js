@@ -26,6 +26,7 @@ class Contact extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
+    this.validatedInput = this.validatedInput.bind(this);
   }
 
   render() {
@@ -71,24 +72,11 @@ class Contact extends Component {
                 <h3>Send us your feedback</h3>
               </div>
               <div className="col-12 col-md-9">
-                <Form onSubmit={this.handleSubmit} onChange={this.handleInputChange}
-                    onBlur={this.handleBlur}>
-
-                  <ValidatedInput field="firstname" value={this.state.firstname}
-                      type="text" name="First Name"
-                      errors={errors} />
-
-                  <ValidatedInput field="lastname" value={this.state.lastname}
-                      type="text" name="Last Name"
-                      errors={errors} />
-
-                  <ValidatedInput field="telnum" value={this.state.telnum}
-                      type="tel" name="Tel. Number"
-                      errors={errors} />
-
-                  <ValidatedInput field="email" value={this.state.email}
-                      type="email" name="Email"
-                      errors={errors} />
+                <Form onSubmit={this.handleSubmit}>
+                  {this.validatedInput("firstname", "First Name", "text", errors.firstname)}
+                  {this.validatedInput("lastname", "Last Name", "text", errors.lastname)}
+                  {this.validatedInput("telnum", "Tel. Number", "tel", errors.telnum)}
+                  {this.validatedInput("email", "Email", "email", errors.email)}
 
                   <FormGroup row>
                     <Col md={{size: 6, offset: 2}}>
@@ -129,6 +117,26 @@ class Contact extends Component {
               </div>
             </div>
         </div>
+    );
+  }
+
+  validatedInput (field, name, type, error) {
+
+    return (
+      <FormGroup row>
+        <Label htmlFor={field} md={2}>{name}</Label>
+        <Col md={10}>
+          <Input type={type} id={field} name={field}
+              placeholder={name}
+              valid={error === ''}
+              invalid={error !== ''}
+              value={this.state[field]}
+              onChange={this.handleInputChange}
+              onBlur={this.handleBlur}
+              />
+          <FormFeedback>{error}</FormFeedback>
+        </Col>
+      </FormGroup>
     );
   }
 
@@ -174,27 +182,11 @@ class Contact extends Component {
     if (this.state.touched.firstname && firstname.length < 3) {
       errors.firstname = 'First Name should be more than 2 characters';
     }
+    if (this.state.touched.lastname && lastname.length < 3) {
+      errors.lastname = 'Last Name should be more than 2 characters';
+    }
     return errors;
   }
 };
-
-const ValidatedInput = props => {
-
-  // value = this.state[props.field];
-  const error = props.errors[props.field]
-
-  return (
-    <FormGroup row>
-      <Label htmlFor={props.field} md={2}>{props.name}</Label>
-      <Col md={10}>
-        <Input type={props.type} id={props.field} name={props.field}
-            placeholder={props.name}
-            valid={error === ''}
-            invalid={error !== ''}/>
-        <FormFeedback>{error}</FormFeedback>
-      </Col>
-    </FormGroup>
-  );
-}
 
 export default Contact;
