@@ -24,7 +24,7 @@
     "onchange": "^5.1.0"
   },
   "scripts": {
-    "start": "run-p watch:scss react:start",
+    "start": "scss && run-p watch:scss react:start",
     "react:start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
