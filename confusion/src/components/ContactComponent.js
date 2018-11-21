@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {Breadcrumb, BreadcrumbItem, Button,
   Label, Col, Row} from 'reactstrap';
 import {Link} from 'react-router-dom';
-import {Control, LocalForm, Errors} from 'react-redux-form';
+import {Control, LocalForm} from 'react-redux-form';
+import {ValidatedInput} from './templates/FormComponent';
 import {REQUIRED, MINLENGTH, MAXLENGTH, ISNUMBER, VALIDEMAIL} from '../shared/rules';
 
 class Contact extends Component {
@@ -11,7 +12,6 @@ class Contact extends Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.validatedInput = this.validatedInput.bind(this);
   }
 
   render() {
@@ -57,10 +57,12 @@ class Contact extends Component {
               </div>
               <div className="col-12 col-md-9">
                 <LocalForm onSubmit={values => this.handleSubmit(values)}>
-                  {this.validatedInput("firstname", "First Name", "text", {REQUIRED, maxLength: MAXLENGTH(15), minLength : MINLENGTH(3)})}
-                  {this.validatedInput("lastname", "Last Name", "text", {REQUIRED, maxLength: MAXLENGTH(15), minLength : MINLENGTH(3)})}
-                  {this.validatedInput("telnum", "Tel. Number", "tel", {REQUIRED, ISNUMBER})}
-                  {this.validatedInput("email", "Email", "email", {REQUIRED, VALIDEMAIL})}
+                  <ValidatedInput field="firstname" name="First Name" type="text"
+                      vrules={{REQUIRED, maxLength: MAXLENGTH(15), minLength: MINLENGTH(3)}} />
+                  <ValidatedInput field="lastname" name="Last Name" type="text"
+                      vrules={{REQUIRED, maxLength: MAXLENGTH(15), minLength: MINLENGTH(3)}} />
+                  <ValidatedInput field="telnum" name="Tel. Number" type="tel" vrules={{REQUIRED, ISNUMBER}} />
+                  <ValidatedInput field="email" name="Email" type="email" vrules={{REQUIRED, VALIDEMAIL}} />
 
                   <Row className="form-group">
                     <Col md={{size: 6, offset: 2}}>
@@ -102,41 +104,6 @@ class Contact extends Component {
             </div>
         </div>
     );
-  }
-
-  validatedInput (field, name, type, vrules) {
-
-    return (
-
-      <Row className="form-group">
-        <Label htmlFor={field} md={2}>{name}</Label>
-        <Col md={10}>
-          <Control.text type={type} id={field} name={field}
-              placeholder={name} className="form-control"
-              model={`.${field}`}
-              validators={Object.keys(vrules).reduce((obj, k) => {
-                obj[k] = vrules[k].test;
-                return obj;
-              }, {})}/>
-          <Errors
-              className="text-danger"
-              model={`.${field}`}
-              show="touched"
-              messages={Object.keys(vrules).reduce((obj, k) => {
-                obj[k] = vrules[k].message(field);
-                return obj;
-              }, {})}
-           />
-        </Col>
-      </Row>
-    );
-  }
-
-  decompEvent(event) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-    return {target, value, name}
   }
 
   handleSubmit(event) {
