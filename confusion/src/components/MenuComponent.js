@@ -23,11 +23,8 @@ const Menu = props => {
           <h3>Menu</h3>
         </div>
       </div>
-      <div className="row">
+      <div className="row row-content">
         {menu}
-      </div>
-      <div className="row">
-        <DishDetail dish={props.dish} comments={props.comments} />
       </div>
     </div>
   );
