@@ -3,14 +3,7 @@ import {Breadcrumb, BreadcrumbItem, Button,
   Label, Col, Row} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import {Control, LocalForm, Errors} from 'react-redux-form';
-
-
-const required = (val) => val && val.length;
-const maxLength = (len) => (val) => !(val) || (val.length <= len);
-const minLength = (len) => (val) => val && (val.length >= len);
-const isNumber = (val) => !isNaN(Number(val));
-const validEmail = (val) =>
-    /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
+import {REQUIRED, MINLENGTH, MAXLENGTH, ISNUMBER, VALIDEMAIL} from '../shared/rules';
 
 class Contact extends Component {
 
@@ -64,10 +57,10 @@ class Contact extends Component {
               </div>
               <div className="col-12 col-md-9">
                 <LocalForm onSubmit={values => this.handleSubmit(values)}>
-                  {this.validatedInput("firstname", "First Name", "text")}
-                  {this.validatedInput("lastname", "Last Name", "text")}
-                  {this.validatedInput("telnum", "Tel. Number", "tel")}
-                  {this.validatedInput("email", "Email", "email")}
+                  {this.validatedInput("firstname", "First Name", "text", {REQUIRED, maxLength: MAXLENGTH(15), minLength : MINLENGTH(3)})}
+                  {this.validatedInput("lastname", "Last Name", "text", {REQUIRED, maxLength: MAXLENGTH(15), minLength : MINLENGTH(3)})}
+                  {this.validatedInput("telnum", "Tel. Number", "tel", {REQUIRED, ISNUMBER})}
+                  {this.validatedInput("email", "Email", "email", {REQUIRED, VALIDEMAIL})}
 
                   <Row className="form-group">
                     <Col md={{size: 6, offset: 2}}>
@@ -111,7 +104,7 @@ class Contact extends Component {
     );
   }
 
-  validatedInput (field, name, type) {
+  validatedInput (field, name, type, vrules) {
 
     return (
 
@@ -121,19 +114,18 @@ class Contact extends Component {
           <Control.text type={type} id={field} name={field}
               placeholder={name} className="form-control"
               model={`.${field}`}
-              validators={{
-                  required, minLength: minLength(3), maxLength: maxLength(15)
-              }}/>
-
+              validators={Object.keys(vrules).reduce((obj, k) => {
+                obj[k] = vrules[k].test;
+                return obj;
+              }, {})}/>
           <Errors
               className="text-danger"
               model={`.${field}`}
               show="touched"
-              messages={{
-                  required: 'Required',
-                  minLength: 'Must be greater than 2 characters',
-                  maxLength: 'Must be 15 characters or less'
-              }}
+              messages={Object.keys(vrules).reduce((obj, k) => {
+                obj[k] = vrules[k].message(field);
+                return obj;
+              }, {})}
            />
         </Col>
       </Row>
@@ -150,7 +142,7 @@ class Contact extends Component {
   handleSubmit(event) {
     console.log("State:", this.state);
     alert("Thanks for of submit!!");
-    event.preventDefault();
+    //event.preventDefault();
   }
 
 };
