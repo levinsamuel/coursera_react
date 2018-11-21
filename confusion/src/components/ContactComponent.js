@@ -106,8 +106,8 @@ class Contact extends Component {
     );
   }
 
-  handleSubmit(event) {
-    console.log("State:", this.state);
+  handleSubmit(values) {
+    console.log("values:", values);
     alert("Thanks for of submit!!");
     //event.preventDefault();
   }
