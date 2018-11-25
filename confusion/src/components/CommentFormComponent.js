@@ -77,8 +77,8 @@ class CommentForm extends Component {
 
   handleSubmit(values) {
     console.log("values:", values);
-    alert("Thanks for of submit!!");
-    //event.preventDefault();
+    this.props.addComment(this.props.dishId, values.rating, values.author,
+      values.comment);
   }
 
 }
