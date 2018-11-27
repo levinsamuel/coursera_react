@@ -44,7 +44,8 @@ const DishDetail = props => {
           <div className="col-12 col-md-5 m-1">
             <RenderComments comments={props.comments}
               addComment={props.addComment}
-              dishId={props.dish.id}/>
+              dishId={props.dish.id}
+            />
           </div>
         </div>
       </div>

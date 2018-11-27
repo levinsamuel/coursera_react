@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import {Button, Modal, ModalBody, ModalHeader, Label, Col, Row}
   from 'reactstrap';
-import {Control, LocalForm} from 'react-redux-form';
+import {Control, Form, actions} from 'react-redux-form';
 import {ValidatedInput} from './templates/FormComponent';
 import {REQUIRED, MINLENGTH, MAXLENGTH}
   from '../shared/rules';
@@ -30,7 +30,7 @@ class CommentForm extends Component {
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
           <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
           <ModalBody>
-            <LocalForm onSubmit={values => this.handleSubmit(values)}>
+            <Form model="addComment" onSubmit={values => this.handleSubmit(values)}>
               <Row className="form-group">
                 <Label htmlFor="rating" md={2}>Rating</Label>
                 <Col md={10}>
@@ -62,7 +62,7 @@ class CommentForm extends Component {
                   </Button>
                 </Col>
               </Row>
-            </LocalForm>
+            </Form>
           </ModalBody>
         </Modal>
       </>

@@ -59,7 +59,8 @@ class Main extends Component {
             err={this.props.dishes.err}
             comments={this.props.comments.filter((comm) =>
                 comm.dishId === parseInt(match.params.dishid))}
-            addComment={this.props.addComment}/>
+            addComment={this.props.addComment}
+        />
       )
 
 
