@@ -15,9 +15,14 @@ export const fetchDishes = () => (dispatch) => {
 
   dispatch(dishesLoading(true));
 
-  setTimeout(()=>{
-    dispatch(addDishes(DISHES));
-    }, 2000)
+  setTimeout(() => {
+    let n = Math.random();
+    if (n < 0.9) {
+      dispatch(addDishes(DISHES));
+    } else {
+      dispatch(dishesFailed("Oops my bad bro"));
+    }
+  }, 2000)
 };
 
 export const dishesLoading = () => ({
