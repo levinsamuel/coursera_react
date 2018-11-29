@@ -9,7 +9,8 @@ import About from './AboutComponent';
 import {Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {actions} from 'react-redux-form';
-import {addComment, fetchDishes} from '../redux/ActionCreators';
+import {addComment, fetchDishes, fetchPromos, fetchComments}
+  from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
   return {
@@ -24,6 +25,8 @@ const mapDispatchToProps = dispatch => ({
   addComment: (dishId, rating, author, comment) =>
       dispatch(addComment(dishId, rating, author, comment)),
   fetchDishes: () => dispatch(fetchDishes()),
+  fetchPromos: () => dispatch(fetchPromos()),
+  fetchComments: () => dispatch(fetchComments()),
   resetFeedbackForm: () => dispatch(actions.reset('feedback'))
 });
 
@@ -37,6 +40,8 @@ class Main extends Component {
   componentDidMount() {
     console.debug("main did mount");
     this.props.fetchDishes();
+    this.props.fetchPromos();
+    this.props.fetchComments();
   }
 
   render() {
@@ -46,7 +51,9 @@ class Main extends Component {
           dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
           dishesLoading={this.props.dishes.isLoading}
           dishesErr={this.props.dishes.err}
-          promotion={this.props.promotions.filter((p) => p.featured)[0]}
+          promotion={this.props.promotions.promotions.filter((p) => p.featured)[0]}
+          promotionsLoading={this.props.promotions.isLoading}
+          promotionsErr={this.props.promotions.err}
           leader={this.props.leaders.filter((l) => l.featured)[0]}
           />
       )
