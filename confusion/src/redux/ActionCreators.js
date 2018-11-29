@@ -38,8 +38,15 @@ export const addDishes = (dishes) => ({
 export const fetchComments = () => (dispatch) => {
 
   return fetch(baseUrl + 'comments')
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Failed to load comments: " + response.status);
+        }
+      })
       .then(comments => dispatch(addComments(comments)))
+      .catch(err => dispatch(commentsFailed(err.toString())))
 };
 
 export const commentsFailed = (err) => ({
@@ -62,7 +69,8 @@ export const fetchPromos = () => (dispatch) => {
         } else {
           throw new Error("Failed to load promos: " + response.status);
         }
-      }).then(promos => dispatch(addPromos(promos)))
+      })
+      .then(promos => dispatch(addPromos(promos)))
       .catch(err => dispatch(promosFailed(err.toString())))
 };
 

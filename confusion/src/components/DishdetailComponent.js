@@ -4,6 +4,7 @@ import {Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem
 import {Link} from 'react-router-dom';
 import CommentForm from './CommentFormComponent'
 import {Loading} from './LoadingComponent';
+import {baseUrl} from '../shared/baseUrl'
 
 const DishDetail = props => {
 
@@ -25,6 +26,20 @@ const DishDetail = props => {
     );
 } else if (props.dish) {
 
+    const comms = (props) => {
+      if (props.commentsErr) {
+        return (
+          <h4>{props.commentsErr}</h4>
+        )
+      } else {
+        return (
+          <RenderComments comments={props.comments}
+            addComment={props.addComment}
+            dishId={props.dish.id}
+          />
+        )
+      }
+    }
     return (
       <div className="container">
         <div className="row">
@@ -42,10 +57,7 @@ const DishDetail = props => {
             <RenderDish dish={props.dish}/>
           </div>
           <div className="col-12 col-md-5 m-1">
-            <RenderComments comments={props.comments}
-              addComment={props.addComment}
-              dishId={props.dish.id}
-            />
+            {comms(props)}
           </div>
         </div>
       </div>
@@ -59,7 +71,7 @@ function RenderDish({dish}) {
   return (
     <div>
       <Card>
-        <CardImg width="100%" src={dish.image} alt={dish.name} />
+        <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
         <CardBody>
           <CardTitle heading="true">{dish.name}</CardTitle>
           <CardText>{dish.description}</CardText>
