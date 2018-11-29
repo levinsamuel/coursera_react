@@ -1,6 +1,11 @@
 import * as ActionTypes from './ActionTypes';
 import {baseUrl} from '../shared/baseUrl';
 
+function constructError(response, rsrc) {
+  return new Error("Status: " + response.status +
+      "; Failed to load " + rsrc + ": " + response.statusText);
+}
+
 export const addComment = (dishId, rating, author, comment) => ({
     type: ActionTypes.ADD_COMMENT,
     payload: {
@@ -16,8 +21,19 @@ export const fetchDishes = () => (dispatch) => {
   dispatch(dishesLoading(true));
 
   return fetch(baseUrl + 'dishes')
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          var err = constructError(response, 'dishes');
+          throw err;
+        }
+      },
+      error => {
+        throw new Error(error.message);
+      })
       .then(dishes => dispatch(addDishes(dishes)))
+      .catch(error => dispatch(dishesFailed(error.message)))
 };
 
 
@@ -42,11 +58,15 @@ export const fetchComments = () => (dispatch) => {
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error("Failed to load comments: " + response.status);
+          var err = constructError(response, 'comments');
+          throw err;
         }
+      },
+      error => {
+        throw new Error(error.message);
       })
       .then(comments => dispatch(addComments(comments)))
-      .catch(err => dispatch(commentsFailed(err.toString())))
+      .catch(err => dispatch(commentsFailed(err.message)));
 };
 
 export const commentsFailed = (err) => ({
@@ -67,11 +87,12 @@ export const fetchPromos = () => (dispatch) => {
         if (response.ok) {
           return response.json()
         } else {
-          throw new Error("Failed to load promos: " + response.status);
+          var err = constructError(response, 'promotions');
+          throw err;
         }
       })
       .then(promos => dispatch(addPromos(promos)))
-      .catch(err => dispatch(promosFailed(err.toString())))
+      .catch(err => dispatch(promosFailed(err.message)))
 };
 
 export const promosLoading = () => ({
