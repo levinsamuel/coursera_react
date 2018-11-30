@@ -102,6 +102,7 @@ export const fetchComments = () => (dispatch) => {
 
 export const deleteComment = (cid) => (dispatch) => {
 
+  dispatch(grayComment(cid))
   alert("Deleting comment with id: " + cid);
   return fetch(baseUrl + 'comments/' + cid, {
         method: 'DELETE',
@@ -121,6 +122,11 @@ export const deleteComment = (cid) => (dispatch) => {
       .then(comments => dispatch(removeComment(cid)))
       .catch(err => dispatch(commentsFailed(err.message)));
 };
+
+export const grayComment = (cid) => ({
+    type: ActionTypes.GRAY_COMMENT,
+    payload: cid
+})
 
 export const removeComment = (cid) => ({
     type: ActionTypes.DELETE_COMMENT,

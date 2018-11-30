@@ -3,6 +3,7 @@ export const DISHES_LOADING = 'DISHES_LOADING';
 export const ADD_DISHES = 'ADD_DISHES';
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const DELETE_COMMENT = 'DELETE_COMMENT';
+export const GRAY_COMMENT = 'GRAY_COMMENT';
 export const ADD_COMMENTS = 'ADD_COMMENTS';
 export const COMMENTS_FAILED = 'COMMENTS_FAILED';
 export const PROMOS_FAILED = 'PROMOS_FAILED';

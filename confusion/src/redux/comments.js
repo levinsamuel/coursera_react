@@ -17,6 +17,16 @@ export const Comments = (state = {
             return {...state,
               comments: state.comments.filter(comm => comm.id !== cid)
             };
+        case ActionTypes.GRAY_COMMENT:
+            var cid = action.payload;
+            return {...state,
+              comments: state.comments.map(comm => {
+                if (comm.id === cid) {
+                  comm.grayed = true;
+                }
+                return comm;
+              })
+            };
 
         default:
           return state;

@@ -1,6 +1,6 @@
 import React from 'react';
-import {Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem}
-  from 'reactstrap';
+import {Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb,
+  BreadcrumbItem, Button} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import CommentForm from './CommentFormComponent'
 import {Loading} from './LoadingComponent';
@@ -89,16 +89,18 @@ function RenderComments({comments, postComment, deleteComment, dishId}) {
     const commsRender = comments.map((comm) => {
         console.debug("date value: ", comm.date)
         const dt = new Date(comm.date);
+        const grayed = comm.grayed ? " text-muted" : "";
         return (
             <div key={comm.id} className="row mt-2">
-              <div className="col-md-10 col-12">
+              <div className={`col-md-10 col-12${grayed}`}>
                 <li className="">{comm.id}: {comm.comment}</li>
                 <li className="mt-1">-- {comm.author}, {dt.toLocaleDateString()}</li>
               </div>
               <div className="col-md-2 col-12">
-                <a onClick={() => deleteComment(comm.id)}>
+                <Button className="btn btn-light" disabled={comm.grayed}
+                    onClick={() => deleteComment(comm.id)}>
                   <span className="fa fa-trash-o"></span>
-                </a>
+                </Button>
               </div>
             </div>
         );
