@@ -9,7 +9,7 @@ import About from './AboutComponent';
 import {Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {actions} from 'react-redux-form';
-import {postComment, fetchDishes, fetchPromos, fetchComments}
+import {postComment, fetchDishes, fetchPromos, fetchComments, deleteComment}
   from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
@@ -27,6 +27,7 @@ const mapDispatchToProps = dispatch => ({
   fetchDishes: () => dispatch(fetchDishes()),
   fetchPromos: () => dispatch(fetchPromos()),
   fetchComments: () => dispatch(fetchComments()),
+  deleteComment: (cid) => dispatch(deleteComment(cid)),
   resetFeedbackForm: () => dispatch(actions.reset('feedback'))
 });
 
@@ -68,6 +69,7 @@ class Main extends Component {
                 comm.dishId === parseInt(match.params.dishid))}
             commentsErr={this.props.comments.err}
             postComment={this.props.postComment}
+            deleteComment={this.props.deleteComment}
         />
       )
 

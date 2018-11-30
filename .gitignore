@@ -59,3 +59,6 @@ typings/
 
 # next.js build output
 .next
+
+# creating a live db file that can be modified without impacting the repository
+livedb.json

@@ -3,8 +3,48 @@ import {baseUrl} from '../shared/baseUrl';
 
 function constructError(response, rsrc) {
   return new Error("Status: " + response.status +
-      "; Failed to load " + rsrc + ": " + response.statusText);
+      "; " + rsrc + " Failure: " + response.statusText +
+      ". Message: " + response.text());
 }
+
+// DISHES
+
+export const fetchDishes = () => (dispatch) => {
+
+  dispatch(dishesLoading(true));
+
+  return fetch(baseUrl + 'dishes')
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          var err = constructError(response, 'dishes');
+          throw err;
+        }
+      },
+      error => {
+        throw new Error(error.message);
+      })
+      .then(dishes => dispatch(addDishes(dishes)))
+      .catch(error => dispatch(dishesFailed(error.message)))
+};
+
+
+export const dishesLoading = () => ({
+  type: ActionTypes.DISHES_LOADING
+});
+
+export const dishesFailed = (err) => ({
+  type: ActionTypes.DISHES_FAILED,
+  payload: err
+});
+
+export const addDishes = (dishes) => ({
+  type: ActionTypes.ADD_DISHES,
+  payload: dishes
+});
+
+// Comments
 
 export const addComment = (comment) => ({
     type: ActionTypes.ADD_COMMENT,
@@ -42,41 +82,6 @@ export const postComment = (dishId, rating, author, comment) => dispatch => {
     });
 };
 
-export const fetchDishes = () => (dispatch) => {
-
-  dispatch(dishesLoading(true));
-
-  return fetch(baseUrl + 'dishes')
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        } else {
-          var err = constructError(response, 'dishes');
-          throw err;
-        }
-      },
-      error => {
-        throw new Error(error.message);
-      })
-      .then(dishes => dispatch(addDishes(dishes)))
-      .catch(error => dispatch(dishesFailed(error.message)))
-};
-
-
-export const dishesLoading = () => ({
-  type: ActionTypes.DISHES_LOADING
-});
-
-export const dishesFailed = (err) => ({
-  type: ActionTypes.DISHES_FAILED,
-  payload: err
-});
-
-export const addDishes = (dishes) => ({
-  type: ActionTypes.ADD_DISHES,
-  payload: dishes
-});
-
 export const fetchComments = () => (dispatch) => {
 
   return fetch(baseUrl + 'comments')
@@ -94,6 +99,33 @@ export const fetchComments = () => (dispatch) => {
       .then(comments => dispatch(addComments(comments)))
       .catch(err => dispatch(commentsFailed(err.message)));
 };
+
+export const deleteComment = (cid) => (dispatch) => {
+
+  alert("Deleting comment with id: " + cid);
+  return fetch(baseUrl + 'comments/' + cid, {
+        method: 'DELETE',
+        credentials: 'same-origin'
+      })
+      .then(response => {
+        if (response.ok) {
+          return response;
+        } else {
+          var err = constructError(response, 'comments');
+          throw err;
+        }
+      },
+      error => {
+        throw new Error(error.message);
+      })
+      .then(comments => dispatch(removeComment(cid)))
+      .catch(err => dispatch(commentsFailed(err.message)));
+};
+
+export const removeComment = (cid) => ({
+    type: ActionTypes.DELETE_COMMENT,
+    payload: cid
+})
 
 export const commentsFailed = (err) => ({
   type: ActionTypes.COMMENTS_FAILED,

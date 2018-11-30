@@ -35,6 +35,7 @@ const DishDetail = props => {
         return (
           <RenderComments comments={props.comments}
             postComment={props.postComment}
+            deleteComment={props.deleteComment}
             dishId={props.dish.id}
           />
         )
@@ -81,7 +82,7 @@ function RenderDish({dish}) {
   )
 }
 
-function RenderComments({comments, postComment, dishId}) {
+function RenderComments({comments, postComment, deleteComment, dishId}) {
 
   if (comments) {
 
@@ -89,9 +90,16 @@ function RenderComments({comments, postComment, dishId}) {
         console.debug("date value: ", comm.date)
         const dt = new Date(comm.date);
         return (
-            <div key={comm.id} className="mt-2">
-              <li className="">{comm.id}: {comm.comment}</li>
-              <li className="mt-1">-- {comm.author}, {dt.toLocaleDateString()}</li>
+            <div key={comm.id} className="row mt-2">
+              <div className="col-md-10 col-12">
+                <li className="">{comm.id}: {comm.comment}</li>
+                <li className="mt-1">-- {comm.author}, {dt.toLocaleDateString()}</li>
+              </div>
+              <div className="col-md-2 col-12">
+                <a onClick={() => deleteComment(comm.id)}>
+                  <span className="fa fa-trash-o"></span>
+                </a>
+              </div>
             </div>
         );
     });
