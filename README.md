@@ -3,7 +3,7 @@
 repo for course: https://www.coursera.org/learn/front-end-react/home/welcome
 
 ## Requirements
- 1. npm`
+ 1. npm
 
 ## Installation
 for now you need to start the client and server separately
