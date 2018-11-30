@@ -6,15 +6,41 @@ function constructError(response, rsrc) {
       "; Failed to load " + rsrc + ": " + response.statusText);
 }
 
-export const addComment = (dishId, rating, author, comment) => ({
+export const addComment = (comment) => ({
     type: ActionTypes.ADD_COMMENT,
-    payload: {
-        dishId: dishId,
-        rating: rating,
-        author: author,
-        comment: comment
-    }
+    payload: comment
 });
+
+export const postComment = (dishId, rating, author, comment) => dispatch => {
+    const newComment = {
+      dishId, rating, author, comment
+    };
+    newComment.date = new Date().toISOString();
+
+    return fetch(baseUrl + "comments", {
+      method: 'POST',
+      body: JSON.stringify(newComment),
+      headers: {
+        "content-type": "application/json"
+      },
+      credentials: 'same-origin'
+    })
+    .then(response => {
+        if (response.ok) {
+          console.debug("create comment response: ", response)
+          return response.json();
+        } else {
+          throw constructError(response, "new comment");
+        }
+      },
+      error => {throw new Error(error.message)}
+    )
+    .then(response => dispatch(addComment(response)))
+    .catch(error => {
+      console.error("Failed to post comment", error);
+      alert("Failed to post comment");
+    });
+};
 
 export const fetchDishes = () => (dispatch) => {
 

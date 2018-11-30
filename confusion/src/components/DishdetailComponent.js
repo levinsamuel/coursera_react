@@ -34,7 +34,7 @@ const DishDetail = props => {
       } else {
         return (
           <RenderComments comments={props.comments}
-            addComment={props.addComment}
+            postComment={props.postComment}
             dishId={props.dish.id}
           />
         )
@@ -81,7 +81,7 @@ function RenderDish({dish}) {
   )
 }
 
-function RenderComments({comments, addComment, dishId}) {
+function RenderComments({comments, postComment, dishId}) {
 
   if (comments) {
 
@@ -101,7 +101,7 @@ function RenderComments({comments, addComment, dishId}) {
         <ul className="list-unstyled">
           {commsRender}
         </ul>
-        <CommentForm dishId={dishId} addComment={addComment}/>
+        <CommentForm dishId={dishId} postComment={postComment}/>
       </div>
     )
   } else {
