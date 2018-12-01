@@ -103,7 +103,7 @@ export const fetchComments = () => (dispatch) => {
 export const deleteComment = (cid) => (dispatch) => {
 
   dispatch(grayComment(cid))
-  alert("Deleting comment with id: " + cid);
+  // alert("Deleting comment with id: " + cid);
   return fetch(baseUrl + 'comments/' + cid, {
         method: 'DELETE',
         credentials: 'same-origin'
