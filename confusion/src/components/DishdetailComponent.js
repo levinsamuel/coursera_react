@@ -96,8 +96,8 @@ function RenderComments({comments, postComment, deleteComment, dishId}) {
         const dt = new Date(comm.date);
         const grayed = comm.grayed ? " text-muted" : "";
         return (
-          <Fade in>
-            <div key={comm.id} className="row mt-2">
+          <Fade in key={comm.id}>
+            <div className="row mt-2">
               <div className={`col-md-10 col-12${grayed}`}>
                 <li className="">{comm.id}: {comm.comment}</li>
                 <li className="mt-1">-- {comm.author}, {dt.toLocaleDateString()}</li>
