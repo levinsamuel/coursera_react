@@ -2,6 +2,7 @@ import React from 'react';
 import {Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb,
   BreadcrumbItem, Button} from 'reactstrap';
 import {Link} from 'react-router-dom';
+import {FadeTransform, Fade, Stagger} from 'react-animation-components';
 import CommentForm from './CommentFormComponent'
 import {Loading} from './LoadingComponent';
 import {baseUrl} from '../shared/baseUrl'
@@ -71,13 +72,17 @@ const DishDetail = props => {
 function RenderDish({dish}) {
   return (
     <div>
-      <Card>
-        <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
-        <CardBody>
-          <CardTitle heading="true">{dish.name}</CardTitle>
-          <CardText>{dish.description}</CardText>
-        </CardBody>
-      </Card>
+      <FadeTransform in transformProps={{
+              exitTransform: 'scale(0.5) translateY(-50%)'
+          }}>
+        <Card>
+          <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
+          <CardBody>
+            <CardTitle heading="true">{dish.name}</CardTitle>
+            <CardText>{dish.description}</CardText>
+          </CardBody>
+        </Card>
+      </FadeTransform>
     </div>
   )
 }
@@ -91,6 +96,7 @@ function RenderComments({comments, postComment, deleteComment, dishId}) {
         const dt = new Date(comm.date);
         const grayed = comm.grayed ? " text-muted" : "";
         return (
+          <Fade in>
             <div key={comm.id} className="row mt-2">
               <div className={`col-md-10 col-12${grayed}`}>
                 <li className="">{comm.id}: {comm.comment}</li>
@@ -103,13 +109,16 @@ function RenderComments({comments, postComment, deleteComment, dishId}) {
                 </Button>
               </div>
             </div>
+          </Fade>
         );
     });
     return (
       <div className="text-left">
         <h4>Comments</h4>
         <ul className="list-unstyled">
-          {commsRender}
+          <Stagger in>
+            {commsRender}
+          </Stagger>
         </ul>
         <CommentForm dishId={dishId} postComment={postComment}/>
       </div>
