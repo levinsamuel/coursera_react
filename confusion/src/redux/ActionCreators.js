@@ -143,6 +143,8 @@ export const addComments = (comments) => ({
   payload: comments
 });
 
+// Promotions
+
 export const fetchPromos = () => (dispatch) => {
 
   dispatch(promosLoading());
@@ -171,4 +173,36 @@ export const promosFailed = (err) => ({
 export const addPromos = (promos) => ({
   type: ActionTypes.ADD_PROMOS,
   payload: promos
+});
+
+// Leaders
+
+export const fetchLeaders = () => (dispatch) => {
+
+  dispatch(leadersLoading());
+  return fetch(baseUrl + 'leaders')
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          var err = constructError(response, 'leaders');
+          throw err;
+        }
+      })
+      .then(leaders => dispatch(addLeaders(leaders)))
+      .catch(err => dispatch(leadersFailed(err.message)))
+};
+
+export const leadersLoading = () => ({
+  type: ActionTypes.LEADERS_LOADING
+});
+
+export const leadersFailed = (err) => ({
+  type: ActionTypes.LEADERS_FAILED,
+  payload: err
+});
+
+export const addLeaders = (leaders) => ({
+  type: ActionTypes.ADD_LEADERS,
+  payload: leaders
 });

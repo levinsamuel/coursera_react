@@ -10,7 +10,7 @@ import {Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {actions} from 'react-redux-form';
 import {TransitionGroup, CSSTransition} from 'react-transition-group';
-import {postComment, fetchDishes, fetchPromos, fetchComments, deleteComment}
+import {postComment, fetchDishes, fetchPromos, fetchLeaders, fetchComments, deleteComment}
   from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
@@ -28,6 +28,7 @@ const mapDispatchToProps = dispatch => ({
   fetchDishes: () => dispatch(fetchDishes()),
   fetchPromos: () => dispatch(fetchPromos()),
   fetchComments: () => dispatch(fetchComments()),
+  fetchLeaders: () => dispatch(fetchLeaders()),
   deleteComment: (cid) => dispatch(deleteComment(cid)),
   resetFeedbackForm: () => dispatch(actions.reset('feedback'))
 });
@@ -44,6 +45,7 @@ class Main extends Component {
     this.props.fetchDishes();
     this.props.fetchPromos();
     this.props.fetchComments();
+    this.props.fetchLeaders();
   }
 
   render() {
@@ -56,7 +58,9 @@ class Main extends Component {
           promotion={this.props.promotions.promotions.filter((p) => p.featured)[0]}
           promotionsLoading={this.props.promotions.isLoading}
           promotionsErr={this.props.promotions.err}
-          leader={this.props.leaders.filter((l) => l.featured)[0]}
+          leader={this.props.leaders.leaders.filter((l) => l.featured)[0]}
+          leadersLoading={this.props.leaders.isLoading}
+          leadersFailed={this.props.leaders.err}
           />
       )
 
@@ -91,7 +95,7 @@ class Main extends Component {
                   () => <Contact resetFeedbackForm={this.props.resetFeedbackForm}/>
                 } />
               <Route path="/aboutus" component={
-                () => <About leaders={this.props.leaders}/>
+                () => <About leaders={this.props.leaders.leaders}/>
                 } />
               <Redirect to="/home" />
             </Switch>
