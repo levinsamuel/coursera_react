@@ -8,29 +8,29 @@ import Menu from './MenuComponent';
 import About from './AboutComponent';
 import {Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {actions} from 'react-redux-form';
 import {TransitionGroup, CSSTransition} from 'react-transition-group';
-import {postComment, fetchDishes, fetchPromos, fetchLeaders, fetchComments, deleteComment}
-  from '../redux/ActionCreators';
+import {postComment, fetchDishes, fetchPromos, fetchLeaders, fetchComments,
+  deleteComment, postFeedback} from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
   return {
     dishes: state.dishes,
     comments: state.comments,
     leaders: state.leaders,
-    promotions: state.promotions
+    promotions: state.promotions,
+    contact: state.contact
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   postComment: (dishId, rating, author, comment) =>
       dispatch(postComment(dishId, rating, author, comment)),
+  postFeedback: feedback => dispatch(postFeedback(feedback)),
   fetchDishes: () => dispatch(fetchDishes()),
   fetchPromos: () => dispatch(fetchPromos()),
   fetchComments: () => dispatch(fetchComments()),
   fetchLeaders: () => dispatch(fetchLeaders()),
-  deleteComment: (cid) => dispatch(deleteComment(cid)),
-  resetFeedbackForm: () => dispatch(actions.reset('feedback'))
+  deleteComment: (cid) => dispatch(deleteComment(cid))
 });
 
 class Main extends Component {
@@ -92,7 +92,10 @@ class Main extends Component {
                 } />
               <Route path="/menu/:dishid" component={DishWithId} />
               <Route path="/contactus" component={
-                  () => <Contact resetFeedbackForm={this.props.resetFeedbackForm}/>
+                  () => <Contact
+                      postFeedback={this.props.postFeedback}
+                      submitDisabled={this.props.contact.submitDisabled}
+                    />
                 } />
               <Route path="/aboutus" component={
                 () => <About leaders={this.props.leaders.leaders}/>

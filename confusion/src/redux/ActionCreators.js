@@ -1,5 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 import {baseUrl} from '../shared/baseUrl';
+import {actions} from 'react-redux-form';
 
 function constructError(response, rsrc) {
   return new Error("Status: " + response.status +
@@ -206,3 +207,39 @@ export const addLeaders = (leaders) => ({
   type: ActionTypes.ADD_LEADERS,
   payload: leaders
 });
+
+// Feedback
+
+export const postFeedback = (feedback) => (dispatch) => {
+
+  dispatch(disableFeedbackButton());
+  return fetch(baseUrl + 'feedback', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(feedback)
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          var err = constructError(response, 'feedback');
+          throw err;
+        }
+      })
+      .then(feedback => alert("Thanks of for submit"))
+      .then(() => dispatch(actions.reset('feedback')))
+      .catch(err => alert("Submit failed: " + err.message))
+      .finally(() => dispatch(enableFeedbackButton()));
+
+};
+
+export const disableFeedbackButton = () => ({
+  type: ActionTypes.FEEDBACK_BUTTON_DISABLE
+})
+
+export const enableFeedbackButton = () => ({
+  type: ActionTypes.FEEDBACK_BUTTON_ENABLE
+})
