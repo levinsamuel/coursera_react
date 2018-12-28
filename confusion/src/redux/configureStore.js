@@ -26,19 +26,19 @@ const Contact = (state = {submitDisabled: false}, action) => {
 
 export const ConfigureStore = () => {
   const store = createStore(
-        combineReducers({
-            dishes: Dishes,
-            comments: Comments,
-            promotions: Promotions,
-            leaders: Leaders,
-            contact: Contact,
-            ...createForms({
-              feedback: InitialFeedback,
-              addComment: InitialComment
-            })
-        }),
-        applyMiddleware(thunk, logger)
-    );
+    combineReducers({
+      dishes: Dishes,
+      comments: Comments,
+      promotions: Promotions,
+      leaders: Leaders,
+      contact: Contact,
+      ...createForms({
+        feedback: InitialFeedback,
+        addComment: InitialComment
+      })
+    }),
+    applyMiddleware(thunk, logger)
+  );
 
   return store;
 }
