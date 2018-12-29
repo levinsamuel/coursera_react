@@ -63,7 +63,7 @@ typings/
 # creating a live db file that can be modified without impacting the repository
 livedb.json
 
-.expo/*
+.expo
 *.jks
 *.p12
 *.key
