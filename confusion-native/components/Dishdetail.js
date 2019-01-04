@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {Card} from 'react-native-elements';
-import {DISHES} from '../shared/dishes';
+import {DISHES} from '../shared/data';
 
 function RenderDish(props) {
 
