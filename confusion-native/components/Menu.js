@@ -19,7 +19,7 @@ class Menu extends React.Component {
   render() {
 
     const {navigate} = this.props.navigation;
-
+      
     const renderMenuItem = ({item, index}) => {
       return (
         <ListItem
@@ -28,11 +28,11 @@ class Menu extends React.Component {
           subtitle={item.description}
           hideChevron={true}
           onPress={() => navigate('Dishdetail', {dishId: item.id})}
-          leftAvatar={{source: require('./images/uthappizza.png')}}
+          leftAvatar={{ source: require('./images/uthappizza.png') }}
         />
       )
     };
-
+// require('./images/uthappizza.png')
     return (
       <FlatList
         data={this.state.dishes}
