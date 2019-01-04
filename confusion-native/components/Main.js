@@ -1,15 +1,17 @@
 import React from 'react';
 import { View, Platform } from 'react-native';
-import {createStackNavigator, createAppContainer} from 'react-navigation'
+import {createStackNavigator, createAppContainer, createDrawerNavigator}
+  from 'react-navigation'
 import Menu from './Menu';
-import DishDetail from './Dishdetail'
+import DishDetail from './Dishdetail';
+import Home from './Home';
 
 const MenuNavigator = createStackNavigator({
   Menu: {screen: Menu},
   Dishdetail: {screen: DishDetail}
 }, {
   initialRouteName: 'Menu',
-  navigationOptions: {
+  defaultNavigationOptions: {
     headerStyle: {
       backgroundColor: '#512DA8'
     },
@@ -20,7 +22,42 @@ const MenuNavigator = createStackNavigator({
   }
 })
 
-const MenuContainer = createAppContainer(MenuNavigator);
+
+const HomeNavigator = createStackNavigator({
+  Home: {
+    screen: Home,
+    navigationOptions: ({navigation}) => ({
+      headerStyle: {
+        backgroundColor: '#512DA8'
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        color: '#fff'
+      }
+    })
+  }
+})
+
+const MainNavigator = createDrawerNavigator({
+  Home: {
+    screen: HomeNavigator,
+    navigationOptions: {
+        title: 'Home',
+        drawerLabel: 'Home'
+    }
+  },
+  Menu: {
+    screen: MenuNavigator,
+    navigationOptions: {
+      title: 'Menu',
+      drawerLabel: 'Menu'
+    }
+  }
+}, {
+  drawerBackgroundColor: '#D1C4E9'
+});
+
+const MainContainer = createAppContainer(MainNavigator);
 
 class Main extends React.Component {
 
@@ -42,7 +79,7 @@ class Main extends React.Component {
             paddingTop: Platform.OS === 'ios' ?
                         0 : Expo.Constants.statusBarHeight
           }} >
-        <MenuContainer />
+        <MainContainer />
       </View>
     )
 
