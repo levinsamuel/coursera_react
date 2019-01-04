@@ -4,6 +4,7 @@ import {createStackNavigator, createAppContainer, createDrawerNavigator}
   from 'react-navigation'
 import Menu from './Menu';
 import DishDetail from './Dishdetail';
+import Contact from './Contact';
 import Home from './Home';
 
 const MenuNavigator = createStackNavigator({
@@ -38,6 +39,22 @@ const HomeNavigator = createStackNavigator({
   }
 })
 
+const ContactNavigator = createStackNavigator({
+  Home: {
+    screen: Contact,
+    navigationOptions: ({navigation}) => ({
+      title: 'Contact',
+      headerStyle: {
+        backgroundColor: '#512DA8'
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        color: '#fff'
+      }
+    })
+  }
+})
+
 const MainNavigator = createDrawerNavigator({
   Home: {
     screen: HomeNavigator,
@@ -51,6 +68,13 @@ const MainNavigator = createDrawerNavigator({
     navigationOptions: {
       title: 'Menu',
       drawerLabel: 'Menu'
+    }
+  },
+  Contact: {
+    screen: ContactNavigator,
+    navigationOptions: {
+      title: 'Contact',
+      drawerLabel: 'Contact'
     }
   }
 }, {
