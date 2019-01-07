@@ -49,13 +49,16 @@ const CustomDrawerContentComponent = (props) => (
     </ScrollView>
   );
 
+const drawerIcon = navigation => ({
+  headerLeft: <Icon name="menu" size={27} color= 'white'
+    onPress={ () => navigation.toggleDrawer() } />,
+  headerLeftContainerStyle: {padding: 20}
+});
+
 const MenuNavigator = createStackNavigator({
   Menu: {
     screen: Menu,
-    navigationOptions: ({navigation}) => ({
-      headerLeft: <Icon name="menu" size={24} color= 'white'
-                   onPress={ () => navigation.toggleDrawer() } />
-    })
+    navigationOptions: ({navigation}) => ({...drawerIcon(navigation)})
   },
   Dishdetail: {screen: DishDetail}
 }, {
@@ -83,9 +86,7 @@ const HomeNavigator = createStackNavigator({
       headerTitleStyle: {
         color: '#fff'
       },
-      headerLeft: <Icon name="menu" size={24}
-        color= 'white'
-        onPress={ () => navigation.toggleDrawer() } />
+      ...drawerIcon(navigation)
     })
   }
 })
@@ -102,9 +103,7 @@ const ContactNavigator = createStackNavigator({
       headerTitleStyle: {
         color: '#fff'
       },
-      headerLeft: <Icon name="menu" size={24}
-       color= 'white'
-       onPress={ () => navigation.toggleDrawer() } />
+      ...drawerIcon(navigation)
     })
   }
 })
@@ -121,9 +120,7 @@ const AboutNavigator = createStackNavigator({
       headerTitleStyle: {
         color: '#fff'
       },
-      headerLeft: <Icon name="menu" size={24}
-        color= 'white'
-        onPress={ () => navigation.toggleDrawer() } />
+      ...drawerIcon(navigation)
     })
   }
 })
