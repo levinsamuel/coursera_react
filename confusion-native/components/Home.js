@@ -1,46 +1,66 @@
-import React from 'react';
-import {View, Text, ScrollView} from 'react-native';
-import {Card} from 'react-native-elements';
-import {connect} from 'react-redux';
-import BASEURL from '../shared/baseUrl';
+import React from "react";
+import { View, Text, ScrollView } from "react-native";
+import { Card } from "react-native-elements";
+import { connect } from "react-redux";
+import BASEURL from "../shared/baseUrl";
+import { Loading } from "./Loading";
 
 const mapStateToProps = state => ({
-    dishes: state.dishes,
-    promotions: state.promotions,
-    leaders: state.leaders
-})
+  dishes: state.dishes,
+  promotions: state.promotions,
+  leaders: state.leaders
+});
 
 function RenderItem(props) {
-
-  const item = props.item;
-  if (item != null) {
+  if (props.isLoading) {
+    return <Loading />;
+  } else if (props.err) {
     return (
-      <Card featuredTitle={item.name}
-          featuredSubTitle={item.designation}
-            image={{uri: BASEURL + item.image}}
-        >
-        <Text style={{margin: 10}}>
-          {item.description}
-        </Text>
-      </Card>
+      <View>
+        <Text>{props.err}</Text>
+      </View>
     );
   } else {
-    return (<View></View>);
+    const item = props.item;
+    if (item != null) {
+      return (
+        <Card
+          featuredTitle={item.name}
+          featuredSubTitle={item.designation}
+          image={{ uri: BASEURL + item.image }}
+        >
+          <Text style={{ margin: 10 }}>{item.description}</Text>
+        </Card>
+      );
+    } else {
+      return <View />;
+    }
   }
 }
 
 class Home extends React.Component {
-
   static navigationOptions = {
-    title: 'Home'
-  }
+    title: "Home"
+  };
 
   render() {
     return (
       <ScrollView>
-        <RenderItem item={this.props.dishes.dishes.filter(dish => dish.featured)[0]} />
-        <RenderItem item={this.props.promotions.promotions.filter(p => p.featured)[0]} />
-        <RenderItem item={this.props.leaders.leaders.filter(l => l.featured)[0]} />
+        <RenderItem
+          item={this.props.dishes.dishes.filter(dish => dish.featured)[0]}
+          isLoading={this.props.dishes.isLoading}
+          err={this.props.dishes.errMess}
+        />
+        <RenderItem
+          item={this.props.promotions.promotions.filter(p => p.featured)[0]}
+          isLoading={this.props.promotions.isLoading}
+          err={this.props.promotions.errMess}
+        />
+        <RenderItem
+          item={this.props.leaders.leaders.filter(l => l.featured)[0]}
+          isLoading={this.props.leaders.isLoading}
+          err={this.props.leaders.errMess}
+        />
       </ScrollView>
     );
   }

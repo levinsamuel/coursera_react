@@ -3,6 +3,7 @@ import {View, Text, ScrollView, StyleSheet, FlatList} from 'react-native';
 import {Card, ListItem} from 'react-native-elements';
 import {connect} from 'react-redux';
 import BASEURL from '../shared/baseUrl';
+import {Loading} from './Loading';
 
 const styles = StyleSheet.create({
   history: {
@@ -19,31 +20,52 @@ class About extends React.Component  {
 
   render() {
 
-    return (
-      <ScrollView>
-        <History/>
-        <Card title='Corporate Leadership'>
-          <FlatList
-            data={this.props.leaders.leaders}
-            keyExtractor={item => item.id.toString()}
-            renderItem={
-              ({item, index}) => {
-                // console.log(item);
-                return (
-                  <ListItem
-                    key={index}
-                    title={item.name}
-                    subtitle={item.description}
-                    hideChevron={true}
-                    leftAvatar={{ source: {uri: BASEURL + item.image} }}
-                    />
-                );
+    if (this.props.leaders.isLoading) {
+      return (
+        <ScrollView>
+          <History/>
+          <Card title='Corporate Leadership'>
+            <Loading/>
+          </Card>
+        </ScrollView>
+      )
+    } else if (this.props.leaders.errMess) {
+      return (
+        <ScrollView>
+          <History/>
+          <Card title='Corporate Leadership'>
+            <Text>{this.props.leaders.errMess}</Text>
+          </Card>
+        </ScrollView>
+      )
+    } else {
+
+      return (
+        <ScrollView>
+          <History/>
+          <Card title='Corporate Leadership'>
+            <FlatList
+              data={this.props.leaders.leaders}
+              keyExtractor={item => item.id.toString()}
+              renderItem={
+                ({item, index}) => {
+                  // console.log(item);
+                  return (
+                    <ListItem
+                      key={index}
+                      title={item.name}
+                      subtitle={item.description}
+                      hideChevron={true}
+                      leftAvatar={{ source: {uri: BASEURL + item.image} }}
+                      />
+                  );
+                }
               }
-            }
-          />
-        </Card>
-      </ScrollView>
-    )
+            />
+          </Card>
+        </ScrollView>
+      )
+    }
   }
 }
 
