@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, ScrollView } from "react-native";
-import { Card } from "react-native-elements";
+import { Card, Button } from "react-native-elements";
 import { connect } from "react-redux";
 import BASEURL from "../shared/baseUrl";
 import { Loading } from "./Loading";
@@ -30,6 +30,14 @@ function RenderItem(props) {
           image={{ uri: BASEURL + item.image }}
         >
           <Text style={{ margin: 10 }}>{item.description}</Text>
+          {
+            props.onPress ?
+            <Button title="Details" onPress={props.onPress}
+              buttonStyle={{
+                backgroundColor: '#512DA8'
+              }}/> :
+            <View/>
+          }
         </Card>
       );
     } else {
@@ -44,12 +52,16 @@ class Home extends React.Component {
   };
 
   render() {
+
+    const {navigate} = this.props.navigation;
+    const dish = this.props.dishes.dishes.filter(dish => dish.featured)[0];
     return (
       <ScrollView>
         <RenderItem
-          item={this.props.dishes.dishes.filter(dish => dish.featured)[0]}
+          item={dish}
           isLoading={this.props.dishes.isLoading}
           err={this.props.dishes.errMess}
+          onPress={() => navigate('Dishdetail', {dishId: dish.id})}
         />
         <RenderItem
           item={this.props.promotions.promotions.filter(p => p.featured)[0]}

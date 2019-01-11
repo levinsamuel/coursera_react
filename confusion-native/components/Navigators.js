@@ -78,21 +78,23 @@ const MenuNavigator = createStackNavigator({
 const HomeNavigator = createStackNavigator({
   Home: {
     screen: Home,
-    navigationOptions: ({navigation}) => ({
-      headerStyle: {
-        backgroundColor: '#512DA8'
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        color: '#fff'
-      },
-      ...drawerIcon(navigation)
-    })
-  }
+    navigationOptions: ({navigation}) => ({...drawerIcon(navigation)})
+  },
+  Dishdetail: {screen: DishDetail}
+}, {
+  defaultNavigationOptions: ({navigation}) => ({
+    headerStyle: {
+      backgroundColor: '#512DA8'
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      color: '#fff'
+    }
+  })
 })
 
 const ContactNavigator = createStackNavigator({
-  Home: {
+  Contact: {
     screen: Contact,
     navigationOptions: ({navigation}) => ({
       title: 'Contact',
@@ -109,7 +111,7 @@ const ContactNavigator = createStackNavigator({
 })
 
 const AboutNavigator = createStackNavigator({
-  Home: {
+  About: {
     screen: About,
     navigationOptions: ({navigation}) => ({
       title: 'About',

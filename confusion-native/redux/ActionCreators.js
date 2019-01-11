@@ -122,6 +122,7 @@ export const fetchLeaders = () => dispatch => {
         if (response.ok) {
             return response;
         } else {
+            console.error(response)
             var error = new Error('Error ' + response.status + ': ' + response.statusText);
             error.response = response;
             throw error;
