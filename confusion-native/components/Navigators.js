@@ -8,6 +8,7 @@ import DishDetail from './Dishdetail';
 import Contact from './Contact';
 import About from './About';
 import Home from './Home';
+import Reservation from './Reservation';
 
 const styles = StyleSheet.create({
   container: {
@@ -55,6 +56,15 @@ const drawerIcon = navigation => ({
   headerLeftContainerStyle: {padding: 20}
 });
 
+const headerStyle = () => ({headerStyle: {
+    backgroundColor: '#512DA8'
+  },
+  headerTintColor: '#fff',
+  headerTitleStyle: {
+    color: '#fff'
+  }
+});
+
 const MenuNavigator = createStackNavigator({
   Menu: {
     screen: Menu,
@@ -64,13 +74,7 @@ const MenuNavigator = createStackNavigator({
 }, {
   initialRouteName: 'Menu',
   defaultNavigationOptions: {
-    headerStyle: {
-      backgroundColor: '#512DA8'
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      color: '#fff'
-    }
+    ...headerStyle()
   }
 })
 
@@ -83,13 +87,7 @@ const HomeNavigator = createStackNavigator({
   Dishdetail: {screen: DishDetail}
 }, {
   defaultNavigationOptions: ({navigation}) => ({
-    headerStyle: {
-      backgroundColor: '#512DA8'
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      color: '#fff'
-    }
+    ...headerStyle()
   })
 })
 
@@ -98,13 +96,7 @@ const ContactNavigator = createStackNavigator({
     screen: Contact,
     navigationOptions: ({navigation}) => ({
       title: 'Contact',
-      headerStyle: {
-        backgroundColor: '#512DA8'
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        color: '#fff'
-      },
+      ...headerStyle(),
       ...drawerIcon(navigation)
     })
   }
@@ -115,17 +107,22 @@ const AboutNavigator = createStackNavigator({
     screen: About,
     navigationOptions: ({navigation}) => ({
       title: 'About',
-      headerStyle: {
-        backgroundColor: '#512DA8'
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        color: '#fff'
-      },
+      ...headerStyle(),
       ...drawerIcon(navigation)
     })
   }
-})
+});
+
+const ReservationNavigator = createStackNavigator({
+  Reservation: {
+    screen: Reservation,
+    navigationOptions: ({navigation}) => ({
+      title: 'Reserve Table',
+      ...headerStyle(),
+      ...drawerIcon(navigation)
+    })
+  }
+});
 
 const MainNavigator = createDrawerNavigator({
   Home: {
@@ -165,6 +162,16 @@ const MainNavigator = createDrawerNavigator({
       drawerLabel: 'Contact Us',
       drawerIcon: ({ tintColor, focused }) => (
         <Icon name='address-card' type='font-awesome' size={24}  color={tintColor} />
+      )
+    }
+  },
+  Reservation: {
+    screen: ReservationNavigator,
+    navigationOptions: {
+      title: 'Make a Reservation',
+      drawerLabel: 'Make a Reservation',
+      drawerIcon: ({ tintColor, focused }) => (
+        <Icon name='cutlery' type='font-awesome' size={24}  color={tintColor} />
       )
     }
   }

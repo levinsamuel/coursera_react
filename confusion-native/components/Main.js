@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Platform } from 'react-native';
-import {createStackNavigator, createAppContainer, createDrawerNavigator}
-  from 'react-navigation';
+import {createAppContainer} from 'react-navigation';
 import {connect} from 'react-redux';
 import {MainNavigator} from './Navigators';
 import {fetchDishes, fetchComments, fetchPromos, fetchLeaders}
