@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, ScrollView, StyleSheet, Picker, Switch} from 'react-native';
+import {Text, View, ScrollView, StyleSheet, Picker, Switch, Modal} from 'react-native';
 import {Card, Button} from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
 import PropTypes from 'prop-types'
@@ -7,7 +7,8 @@ import PropTypes from 'prop-types'
 const initialState = () => ({
   guests: 1,
   smoking: false,
-  date: null
+  date: null,
+  showModal: false
 });
 
 class Reservation extends React.Component {
@@ -15,7 +16,17 @@ class Reservation extends React.Component {
 
   handleReservation() {
     console.log(this.state);
+    this.toggleModal()
+  }
+
+  resetForm() {
     this.setState(initialState())
+  }
+
+  toggleModal() {
+    this.setState((state, props) => ({
+        showModal: !state.showModal
+    }))
   }
 
   constructor(props) {
@@ -66,10 +77,22 @@ class Reservation extends React.Component {
         </View>
 
         <View style={styles.formRow}>
-          <Text style={styles.formLabel}>Smoking/Non-Smoking</Text>
-          <Button title='Reserve' color='#512DA8' onPress={this.handleReservation}
+          <Text style={styles.formLabel}>Make Reservation</Text>
+          <Button title='Reserve' buttonStyle={styles.button} onPress={this.handleReservation}
             accessibilityLabel="Learn more about this purple button"/>
         </View>
+        <Modal animationType='slide' transparent={false} visible={this.state.showModal}
+            onDismiss={()=>{this.toggleModal(); this.resetForm()}}
+            onRequestClose = {() => this.toggleModal() }>
+          <View style = {styles.modal}>
+            <Text style = {styles.modalTitle}>Your Reservation</Text>
+            <Text style = {styles.modalText}>Number of Guests: {this.state.guests}</Text>
+            <Text style = {styles.modalText}>Smoking?: {this.state.smoking ? 'Yes' : 'No'}</Text>
+            <Text style = {styles.modalText}>Date and Time: {this.state.date}</Text>
+            <Button onPress = {() =>{this.toggleModal(); this.resetForm();}}
+                buttonStyle={styles.button} title="Close" />
+          </View>
+        </Modal>
       </ScrollView>
     )
   }
@@ -89,6 +112,25 @@ const styles = StyleSheet.create({
   },
   formItem: {
       flex: 1
+  },
+  modal: {
+    justifyContent: 'center',
+    margin: 20
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    backgroundColor: '#512DA8',
+    color: 'white',
+    textAlign: 'center',
+    marginBottom: 20
+  },
+  modalText: {
+    fontSize: 18,
+    margin: 10
+  },
+  button: {
+    backgroundColor: '#512DA8'
   }
 })
 
