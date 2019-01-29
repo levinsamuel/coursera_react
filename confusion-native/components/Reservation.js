@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View, ScrollView, StyleSheet, Picker, Switch, Modal} from 'react-native';
 import {Card, Button} from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
-import PropTypes from 'prop-types'
+import {modalStyles, formStyles, commonStyles} from '../shared/commonStyles';
 
 const initialState = () => ({
   guests: 1,
@@ -39,9 +39,9 @@ class Reservation extends React.Component {
   render () {
     return (
       <ScrollView>
-        <View style={styles.formRow}>
-          <Text style={styles.formLabel}>Number of Guests</Text>
-          <Picker style={styles.formItem} selectedValue={this.state.guests}
+        <View style={formStyles.formRow}>
+          <Text style={formStyles.formLabel}>Number of Guests</Text>
+          <Picker style={formStyles.formItem} selectedValue={this.state.guests}
               onValueChange={(itemValue, itemIndex) => this.setState({guests: itemValue})}>
             <Picker.Item label='1' value='1'/>
             <Picker.Item label='2' value='2'/>
@@ -51,14 +51,14 @@ class Reservation extends React.Component {
             <Picker.Item label='6' value='6'/>
           </Picker>
         </View>
-        <View style={styles.formRow}>
-          <Text style={styles.formLabel}>Smoking/Non-Smoking</Text>
-          <Switch style={styles.formItem} value={this.state.smoking}
+        <View style={formStyles.formRow}>
+          <Text style={formStyles.formLabel}>Smoking/Non-Smoking</Text>
+          <Switch style={formStyles.formItem} value={this.state.smoking}
               trackColor='#512DA8' onValueChange={val => this.setState({smoking: val})}>
           </Switch>
         </View>
-        <View style={styles.formRow}>
-          <Text style={styles.formLabel}>Date and Time</Text>
+        <View style={formStyles.formRow}>
+          <Text style={formStyles.formLabel}>Date and Time</Text>
           <DatePicker style={{flex: 2, marginRight: 20}}
             date={this.state.date} format='' mode='datetime'
             placeholder='select date and time' minDate='2017-01-01'
@@ -76,21 +76,21 @@ class Reservation extends React.Component {
           />
         </View>
 
-        <View style={styles.formRow}>
-          <Text style={styles.formLabel}>Make Reservation</Text>
-          <Button title='Reserve' buttonStyle={styles.button} onPress={this.handleReservation}
+        <View style={formStyles.formRow}>
+          <Text style={formStyles.formLabel}>Make Reservation</Text>
+          <Button title='Reserve' buttonStyle={commonStyles.button} onPress={this.handleReservation}
             accessibilityLabel="Learn more about this purple button"/>
         </View>
         <Modal animationType='slide' transparent={false} visible={this.state.showModal}
             onDismiss={()=>{this.toggleModal(); this.resetForm()}}
             onRequestClose = {() => this.toggleModal() }>
-          <View style = {styles.modal}>
-            <Text style = {styles.modalTitle}>Your Reservation</Text>
-            <Text style = {styles.modalText}>Number of Guests: {this.state.guests}</Text>
-            <Text style = {styles.modalText}>Smoking?: {this.state.smoking ? 'Yes' : 'No'}</Text>
-            <Text style = {styles.modalText}>Date and Time: {this.state.date}</Text>
+          <View style = {modalStyles.modal}>
+            <Text style = {modalStyles.modalTitle}>Your Reservation</Text>
+            <Text style = {modalStyles.modalText}>Number of Guests: {this.state.guests}</Text>
+            <Text style = {modalStyles.modalText}>Smoking?: {this.state.smoking ? 'Yes' : 'No'}</Text>
+            <Text style = {modalStyles.modalText}>Date and Time: {this.state.date}</Text>
             <Button onPress = {() =>{this.toggleModal(); this.resetForm();}}
-                buttonStyle={styles.button} title="Close" />
+                buttonStyle={commonStyles.button} title="Close" />
           </View>
         </Modal>
       </ScrollView>
@@ -98,40 +98,5 @@ class Reservation extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  formRow: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    flexDirection: 'row',
-    margin: 20
-  },
-  formLabel: {
-      fontSize: 18,
-      flex: 2
-  },
-  formItem: {
-      flex: 1
-  },
-  modal: {
-    justifyContent: 'center',
-    margin: 20
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    backgroundColor: '#512DA8',
-    color: 'white',
-    textAlign: 'center',
-    marginBottom: 20
-  },
-  modalText: {
-    fontSize: 18,
-    margin: 10
-  },
-  button: {
-    backgroundColor: '#512DA8'
-  }
-})
 
 export default Reservation;
