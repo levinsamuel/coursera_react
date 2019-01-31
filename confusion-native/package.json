@@ -4,7 +4,9 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "test": "jest",
+    "test:watch": "npm test -- --watch"
   },
   "dependencies": {
     "expo": "^31.0.2",
@@ -19,7 +21,9 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0"
+    "babel-jest": "^24.0.0",
+    "babel-preset-expo": "^5.0.0",
+    "jest": "^24.0.0"
   },
   "private": true,
   "proxy": "http://192.168.1.12:3001/"

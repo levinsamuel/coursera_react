@@ -3,7 +3,11 @@ export const ADD_DISHES = 'ADD_DISHES';
 export const DISHES_FAILED = 'DISHES_FAILED';
 
 export const ADD_COMMENTS = 'ADD_COMMENTS';
+export const ADD_COMMENT = 'ADD_COMMENT';
 export const COMMENTS_FAILED = 'COMMENTS_FAILED';
+export const COMMENT_MODAL = 'COMMENT_MODAL';
+export const DISABLE_CMODAL = 'DISABLE_CMODAL';
+export const POST_COMMENT = 'POST_COMMENT';
 
 export const PROMOS_LOADING = 'PROMOS_LOADING';
 export const ADD_PROMOS = 'ADD_PROMOS';

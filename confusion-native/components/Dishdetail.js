@@ -3,7 +3,8 @@ import {View, Text, ScrollView, FlatList, Modal, TextInput} from 'react-native';
 import {Card, Icon, Rating, Button} from 'react-native-elements';
 import {connect} from 'react-redux';
 import BASEURL from '../shared/baseUrl';
-import {postFavorite} from '../redux/ActionCreators';
+import {postFavorite, toggleCommentModal, closeCommentModal, postComment}
+  from '../redux/ActionCreators';
 import {commonStyles, modalStyles, formStyles} from '../shared/commonStyles';
 
 const mapStateToProps = state => ({
@@ -13,7 +14,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  postFavorite: dishId => dispatch(postFavorite(dishId))
+  postFavorite: dishId => dispatch(postFavorite(dishId)),
+  toggleModal: () => dispatch(toggleCommentModal()),
+  closeModal: () => dispatch(closeCommentModal()),
+  postComment: comment => dispatch(postComment(comment))
 });
 
 function RenderComments(props) {
@@ -58,7 +62,7 @@ function RenderDish(props) {
             />
           <Icon raised reverse name='comment'
               type='font-awesome' color='#512DA8'
-              onPress={() => props.commentModal()} />
+              onPress={props.commentModal} />
         </View>
       </Card>
     )
@@ -69,9 +73,9 @@ function RenderDish(props) {
 }
 
 const initialState = () => ({
-  showModal: false,
-  rating: 0,
-  txt: ''
+  rating: 3,
+  author: '',
+  comment: ''
 })
 
 class DishDetail extends React.Component {
@@ -90,9 +94,7 @@ class DishDetail extends React.Component {
   };
 
   commentModal() {
-    this.setState((state, props) => ({
-      showModal: !state.showModal
-    }))
+    this.props.toggleModal();
   }
 
   rate(rating) {
@@ -102,12 +104,37 @@ class DishDetail extends React.Component {
   }
 
   submitRating() {
-    console.log(this.state);
-    this.resetForm()
+    const dishId = this.props.navigation.getParam('dishId', '');
+    const {comment, author, rating} = this.state;
+    commstr = {
+      dishId, comment, author, rating,
+      date: JSON.stringify(new Date())
+    }
+    console.log(commstr);
+    this.props.postComment(commstr);
+    this.resetForm();
   }
 
   resetForm() {
-    this.setState(initialState())
+    this.props.closeModal();
+    this.setState(initialState());
+  }
+
+  componentWillUnmount() {
+    this.resetForm();
+  }
+
+  validate(field) {
+    if (!this.state[field]) {
+      console.log('invalid, empty value: ', field)
+      this.setState((state, props) =>
+        ({[field + 'Error']: 'Value for ' + field + ' is required.'})
+      )
+    } else {
+      this.setState((state, props) =>
+        ({[field + 'Error']: null})
+      )
+    }
   }
 
   render() {
@@ -117,33 +144,40 @@ class DishDetail extends React.Component {
         <RenderDish dish={this.props.dishes.dishes[+dishId]}
             favorite={this.props.favorites.favorites.some(el => el === dishId)}
             onPress={() => this.props.postFavorite(dishId)}
-            commentModal={this.commentModal}
+            commentModal={this.props.toggleModal}
           />
         <RenderComments comments={this.props.comments.comments.filter(
             comm => comm.dishId === dishId
           )} />
 
-        <Modal animationType='slide' transparent={false} visible={this.state.showModal}
-            onDismiss={()=>{this.commentModal(); }}
-            onRequestClose = {() => this.commentModal() }>
+        <Modal animationType='slide' transparent={false} visible={this.props.comments.showModal}
+            onDismiss={this.props.toggleModal}
+            onRequestClose={this.resetForm}>
           <View style={modalStyles.modal}>
             <Text style={modalStyles.modalTitle}>Your Comment</Text>
             <Rating ratingCount={5} imageSize={60} showRating onFinishRating={this.rate}
-                style={modalStyles.modalText}/>
-            <TextInput value={this.state.text} onChangeText={txt => this.setState({txt})}
-                inlineImageLeft='search_icon' style={{margin: 5}}/>
-                style={modalStyles.modalText}/>
-            <TextInput value={this.state.text} onChangeText={txt => this.setState({txt})}
-                inlineImageLeft='search_icon' style={{margin: 5}}/>
-              <Button onPress={this.submitRating}
+                style={{margin: 10}} startingValue={this.state.rating}/>
+            <TextInput value={this.state.author} style={commonStyles.textInput}
+                onBlur={() => this.validate('author')}
+                onChangeText={author => this.setState({author})} placeholder='Author' />
+            {this.state.authorError &&
+              (<Text style={{color: 'red'}}>{this.state.authorError}</Text>)}
+            <TextInput value={this.state.comment} style={commonStyles.textInput}
+                onBlur={() => this.validate('comment')}
+                onChangeText={comment => this.setState({comment})} placeholder='Comment' />
+              {this.state.commentError &&
+              (<Text style={{color: 'red'}}>{this.state.commentError}</Text>)}
+            <Button onPress={this.submitRating}
                 buttonStyle={commonStyles.button} title="Comment" />
-            <Button onPress={() => {this.resetForm();}}
+              <Button onPress={this.resetForm}
                 buttonStyle={commonStyles.cancelButton} title="Cancel" />
           </View>
         </Modal>
       </ScrollView>
     )
   }
+
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DishDetail);

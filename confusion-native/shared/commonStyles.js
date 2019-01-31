@@ -8,6 +8,11 @@ export const commonStyles = StyleSheet.create({
   cancelButton: {
     backgroundColor: 'gray',
     margin: 5
+  },
+  textInput: {
+    borderBottomColor: '#bbb',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    margin: 5
   }
 })
 
