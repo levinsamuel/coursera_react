@@ -104,15 +104,17 @@ class DishDetail extends React.Component {
   }
 
   submitRating() {
-    const dishId = this.props.navigation.getParam('dishId', '');
-    const {comment, author, rating} = this.state;
-    commstr = {
-      dishId, comment, author, rating,
-      date: JSON.stringify(new Date())
+    if (isValid()) {
+      const dishId = this.props.navigation.getParam('dishId', '');
+      const {comment, author, rating} = this.state;
+      commstr = {
+        dishId, comment, author, rating,
+        date: JSON.stringify(new Date())
+      }
+      console.log(commstr);
+      this.props.postComment(commstr);
+      this.resetForm();
     }
-    console.log(commstr);
-    this.props.postComment(commstr);
-    this.resetForm();
   }
 
   resetForm() {
@@ -135,6 +137,10 @@ class DishDetail extends React.Component {
         ({[field + 'Error']: null})
       )
     }
+  }
+
+  isValid() {
+    return !this.state.authorError && !this.state.commentError
   }
 
   render() {
@@ -165,7 +171,7 @@ class DishDetail extends React.Component {
             <TextInput value={this.state.comment} style={commonStyles.textInput}
                 onBlur={() => this.validate('comment')}
                 onChangeText={comment => this.setState({comment})} placeholder='Comment' />
-              {this.state.commentError &&
+            {this.state.commentError &&
               (<Text style={{color: 'red'}}>{this.state.commentError}</Text>)}
             <Button onPress={this.submitRating}
                 buttonStyle={commonStyles.button} title="Comment" />
