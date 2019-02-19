@@ -25,13 +25,13 @@ function RenderComments(props) {
 
   const renderCommentItem = ({item, index}) => {
 
-    return (
-        <View key={index} style={{margin: 10, alignItems: 'flex-start'}}>
-            <Text style={{fontSize: 14}}>{item.comment}</Text>
-            <Rating readonly startingValue={item.rating} imageSize={14}
-                style={{paddingVertical: 5}}/>
-            <Text style={{fontSize: 12}}>{'-- ' + item.author + ', ' + item.date} </Text>
-        </View>
+  return (
+      <View key={index} style={{margin: 10, alignItems: 'flex-start'}}>
+          <Text style={{fontSize: 14}}>{item.comment}</Text>
+          <Rating readonly startingValue={item.rating} imageSize={14}
+              style={{paddingVertical: 5}}/>
+          <Text style={{fontSize: 12}}>{'-- ' + item.author + ', ' + item.date} </Text>
+      </View>
     )
   }
 
@@ -75,7 +75,9 @@ function RenderDish(props) {
 const initialState = () => ({
   rating: 3,
   author: '',
-  comment: ''
+  comment: '',
+  authorError: null,
+  commentError: null
 })
 
 class DishDetail extends React.Component {
@@ -84,9 +86,10 @@ class DishDetail extends React.Component {
     super(props);
     this.state = initialState()
     this.commentModal = this.commentModal.bind(this);
-    this.rate = this.rate.bind(this);
     this.submitRating = this.submitRating.bind(this);
     this.resetForm = this.resetForm.bind(this);
+    this.isValid = this.isValid.bind(this);
+    this.validate = this.validate.bind(this);
   }
 
   static navigationOptions = {
@@ -97,14 +100,13 @@ class DishDetail extends React.Component {
     this.props.toggleModal();
   }
 
-  rate(rating) {
-    this.setState({
-      rating
-    })
+
+  isValid() {
+    return !this.state.authorError && !this.state.commentError
   }
 
   submitRating() {
-    if (isValid()) {
+    if (this.isValid()) {
       const dishId = this.props.navigation.getParam('dishId', '');
       const {comment, author, rating} = this.state;
       commstr = {
@@ -139,9 +141,6 @@ class DishDetail extends React.Component {
     }
   }
 
-  isValid() {
-    return !this.state.authorError && !this.state.commentError
-  }
 
   render() {
     const dishId = this.props.navigation.getParam('dishId', '');
@@ -159,31 +158,48 @@ class DishDetail extends React.Component {
         <Modal animationType='slide' transparent={false} visible={this.props.comments.showModal}
             onDismiss={this.props.toggleModal}
             onRequestClose={this.resetForm}>
+
           <View style={modalStyles.modal}>
+
             <Text style={modalStyles.modalTitle}>Your Comment</Text>
-            <Rating ratingCount={5} imageSize={60} showRating onFinishRating={this.rate}
-                style={{margin: 10}} startingValue={this.state.rating}/>
-            <TextInput value={this.state.author} style={commonStyles.textInput}
-                onBlur={() => this.validate('author')}
-                onChangeText={author => this.setState({author})} placeholder='Author' />
-            {this.state.authorError &&
-              (<Text style={{color: 'red'}}>{this.state.authorError}</Text>)}
-            <TextInput value={this.state.comment} style={commonStyles.textInput}
-                onBlur={() => this.validate('comment')}
-                onChangeText={comment => this.setState({comment})} placeholder='Comment' />
-            {this.state.commentError &&
-              (<Text style={{color: 'red'}}>{this.state.commentError}</Text>)}
+            <Rating ratingCount={5} imageSize={60} showRating
+              onFinishRating={rating => this.setState({rating})}
+              style={{margin: 10}} startingValue={this.state.rating}/>
+
+            <ValidatedInput field='Author' onBlur={this.validate}
+                parentState={this.state} setText={author => this.setState({author})} />
+
+            <ValidatedInput field='Comment' onBlur={this.validate}
+                parentState={this.state}
+                setText={comment => this.setState({comment})} />
+
             <Button onPress={this.submitRating}
-                buttonStyle={commonStyles.button} title="Comment" />
-              <Button onPress={this.resetForm}
-                buttonStyle={commonStyles.cancelButton} title="Cancel" />
+              buttonStyle={commonStyles.button} title="Comment" />
+            <Button onPress={this.resetForm}
+              buttonStyle={commonStyles.cancelButton} title="Cancel" />
           </View>
         </Modal>
       </ScrollView>
     )
   }
 
+}
 
+
+const ValidatedInput = props => {
+
+  const field = props.field.toLowerCase();
+  const error = props.parentState[field + 'Error'];
+
+  return (
+    <>
+      <TextInput value={props.parentState[field]} style={commonStyles.textInput}
+        onBlur={() => props.onBlur(field)}
+        onChangeText={text => props.setText(text)} placeholder={props.field} />
+      {error &&
+        (<Text style={{color: 'red'}}>{error}</Text>)}
+    </>
+  )
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DishDetail);
