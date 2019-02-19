@@ -98,9 +98,9 @@ class DishDetail extends React.Component {
     this.commentModal = this.commentModal.bind(this);
     this.submitRating = this.submitRating.bind(this);
     this.resetForm = this.resetForm.bind(this);
-    this.isValid = this.isValid.bind(this);
     this.validate = this.validate.bind(this);
-    this.validate2 = this.validate2.bind(this);
+    this.validateAll = this.validateAll.bind(this);
+    this.setText = this.setText.bind(this);
   }
 
   static navigationOptions = {
@@ -111,22 +111,21 @@ class DishDetail extends React.Component {
     this.props.toggleModal();
   }
 
-
-  isValid() {
-    return !this.state.authorError && !this.state.commentError
-  }
-
   submitRating() {
-    if (this.isValid()) {
+    if (this.validateAll()) {
       const dishId = this.props.navigation.getParam('dishId', '');
-      const {comment, author, rating} = this.state;
+      const {rating, fields} = this.state;
       commstr = {
-        dishId, comment, author, rating,
+        dishId, rating,
+        comment: fields.comment.value,
+        author: fields.author.value,
         date: JSON.stringify(new Date())
       }
       console.log(commstr);
       this.props.postComment(commstr);
       this.resetForm();
+    } else {
+      console.log('invalid input')
     }
   }
 
@@ -139,20 +138,32 @@ class DishDetail extends React.Component {
     this.resetForm();
   }
 
-  validate2(field) {
-    // if (!this.state[field]) {
-    //   console.log('invalid, empty value: ', field)
-    //   this.setState((state, props) =>
-    //     ({[field + 'Error']: 'Value for ' + field + ' is required.'})
-    //   )
-    // } else {
-    //   this.setState((state, props) =>
-    //     ({[field + 'Error']: null})
-    //   )
-    // }
+  setText(field, text) {
+    this.setState((state, props) => ({
+      fields: {
+        ...state.fields,
+        [field]: {
+          ...state.fields[field],
+          value: text
+        }
+      }
+    }), () => {
+      this.validate(field);
+    })
+  }
+
+  validateAll() {
+    valid = true;
+    // console.log(Object.keys(this.state.fields))
+    for (var k of Object.keys(this.state.fields)) {
+      // validate all even if invalid one found, in order to show errors
+      valid = this.validate(k) && valid;
+    }
+    return valid;
   }
 
   validate(field) {
+    console.log('validating', this.state.fields[field])
     if (!this.state.fields[field].value) {
       console.log('invalid, empty value: ', field)
       this.setState((state, props) =>
@@ -166,18 +177,26 @@ class DishDetail extends React.Component {
           }
         })
       )
+
+      return false;
     } else {
-      this.setState((state, props) =>
-        ({
-          fields: {
-            ...state.fields,
-            [field]: {
-              ...state.fields[field],
-              error: null
+
+      // if valid, remove error message
+      if (this.state.fields[field].error) {
+        this.setState((state, props) =>
+          ({
+            fields: {
+              ...state.fields,
+              [field]: {
+                ...state.fields[field],
+                error: null
+              }
             }
-          }
-        })
-      )
+          })
+        )
+      }
+
+      return true;
     }
   }
 
@@ -196,16 +215,7 @@ class DishDetail extends React.Component {
         field = fields[p];
         return (
           <ValidatedInput key={i++} field={field.name} onBlur={this.validate}
-              error={field.error} value={field.value}
-              setText={(f, t) => this.setState((state, props) => ({
-                  fields: {
-                    ...state.fields,
-                    [f]: {
-                      ...state.fields[f],
-                      value: t
-                    }
-                  }
-                }))}
+              error={field.error} value={field.value} setText={this.setText}
               />
         )
       });
