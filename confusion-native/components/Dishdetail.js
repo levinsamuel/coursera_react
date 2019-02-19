@@ -74,10 +74,18 @@ function RenderDish(props) {
 
 const initialState = () => ({
   rating: 3,
-  author: '',
-  comment: '',
-  authorError: null,
-  commentError: null
+  fields: {
+    author: {
+      name: 'Author',
+      value: '',
+      error: null
+    },
+    comment: {
+      name: 'Comment',
+      value: '',
+      error: null
+    }
+  }
 })
 
 class DishDetail extends React.Component {
@@ -90,6 +98,7 @@ class DishDetail extends React.Component {
     this.resetForm = this.resetForm.bind(this);
     this.isValid = this.isValid.bind(this);
     this.validate = this.validate.bind(this);
+    this.validate2 = this.validate2.bind(this);
   }
 
   static navigationOptions = {
@@ -128,6 +137,19 @@ class DishDetail extends React.Component {
     this.resetForm();
   }
 
+  validate2(field) {
+    // if (!this.state[field]) {
+    //   console.log('invalid, empty value: ', field)
+    //   this.setState((state, props) =>
+    //     ({[field + 'Error']: 'Value for ' + field + ' is required.'})
+    //   )
+    // } else {
+    //   this.setState((state, props) =>
+    //     ({[field + 'Error']: null})
+    //   )
+    // }
+  }
+
   validate(field) {
     if (!this.state[field]) {
       console.log('invalid, empty value: ', field)
@@ -143,7 +165,30 @@ class DishDetail extends React.Component {
 
 
   render() {
+
     const dishId = this.props.navigation.getParam('dishId', '');
+    const fields = this.state.fields;
+
+    var i = 0;
+    const inputs = Object.keys(fields).map(p => {
+      console.log('create input: ', p)
+      field = fields[p];
+      return (
+        <ValidatedInput key={i++} field={field.name} onBlur={this.validate}
+            error={field.error}  setText={t => this.setState((state, props) => ({
+                fields: {
+                  ...state.fields,
+                  [p]: {
+                    ...state.fields[p],
+                    value: t
+                  }
+                }
+              }))}
+            />
+      )
+    });
+    console.log(inputs.length)
+
     return (
       <ScrollView>
         <RenderDish dish={this.props.dishes.dishes[+dishId]}
@@ -166,12 +211,7 @@ class DishDetail extends React.Component {
               onFinishRating={rating => this.setState({rating})}
               style={{margin: 10}} startingValue={this.state.rating}/>
 
-            <ValidatedInput field='Author' onBlur={this.validate}
-                parentState={this.state} setText={author => this.setState({author})} />
-
-            <ValidatedInput field='Comment' onBlur={this.validate}
-                parentState={this.state}
-                setText={comment => this.setState({comment})} />
+            {inputs}
 
             <Button onPress={this.submitRating}
               buttonStyle={commonStyles.button} title="Comment" />
@@ -189,11 +229,12 @@ class DishDetail extends React.Component {
 const ValidatedInput = props => {
 
   const field = props.field.toLowerCase();
-  const error = props.parentState[field + 'Error'];
+  const error = props.error;
 
+  console.log('rendering for:', field)
   return (
     <>
-      <TextInput value={props.parentState[field]} style={commonStyles.textInput}
+      <TextInput value='' style={commonStyles.textInput}
         onBlur={() => props.onBlur(field)}
         onChangeText={text => props.setText(text)} placeholder={props.field} />
       {error &&
