@@ -78,12 +78,14 @@ const initialState = () => ({
     author: {
       name: 'Author',
       value: '',
-      error: null
+      error: null,
+      order: 1
     },
     comment: {
       name: 'Comment',
       value: '',
-      error: null
+      error: null,
+      order: 2
     }
   }
 })
@@ -151,14 +153,30 @@ class DishDetail extends React.Component {
   }
 
   validate(field) {
-    if (!this.state[field]) {
+    if (!this.state.fields[field].value) {
       console.log('invalid, empty value: ', field)
       this.setState((state, props) =>
-        ({[field + 'Error']: 'Value for ' + field + ' is required.'})
+        ({
+          fields: {
+            ...state.fields,
+            [field]: {
+              ...state.fields[field],
+              error: 'Value for ' + field + ' is required.'
+            }
+          }
+        })
       )
     } else {
       this.setState((state, props) =>
-        ({[field + 'Error']: null})
+        ({
+          fields: {
+            ...state.fields,
+            [field]: {
+              ...state.fields[field],
+              error: null
+            }
+          }
+        })
       )
     }
   }
@@ -170,23 +188,27 @@ class DishDetail extends React.Component {
     const fields = this.state.fields;
 
     var i = 0;
-    const inputs = Object.keys(fields).map(p => {
-      console.log('create input: ', p)
-      field = fields[p];
-      return (
-        <ValidatedInput key={i++} field={field.name} onBlur={this.validate}
-            error={field.error}  setText={t => this.setState((state, props) => ({
-                fields: {
-                  ...state.fields,
-                  [p]: {
-                    ...state.fields[p],
-                    value: t
+    const inputs = Object.keys(fields).sort((a, b) => {
+      var ord = fields[a].order - fields[b].order;
+      return ord > 0 ? 1 : -1
+    }).map(p => {
+        console.log('create input: ', p)
+        field = fields[p];
+        return (
+          <ValidatedInput key={i++} field={field.name} onBlur={this.validate}
+              error={field.error} value={field.value}
+              setText={(f, t) => this.setState((state, props) => ({
+                  fields: {
+                    ...state.fields,
+                    [f]: {
+                      ...state.fields[f],
+                      value: t
+                    }
                   }
-                }
-              }))}
-            />
-      )
-    });
+                }))}
+              />
+        )
+      });
     console.log(inputs.length)
 
     return (
@@ -234,9 +256,9 @@ const ValidatedInput = props => {
   console.log('rendering for:', field)
   return (
     <>
-      <TextInput value='' style={commonStyles.textInput}
+      <TextInput value={props.value} style={commonStyles.textInput}
         onBlur={() => props.onBlur(field)}
-        onChangeText={text => props.setText(text)} placeholder={props.field} />
+        onChangeText={text => props.setText(field, text)} placeholder={props.field} />
       {error &&
         (<Text style={{color: 'red'}}>{error}</Text>)}
     </>
