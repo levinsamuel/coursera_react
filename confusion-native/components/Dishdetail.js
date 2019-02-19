@@ -72,6 +72,24 @@ function RenderDish(props) {
 
 }
 
+
+function ValidatedInput(props) {
+
+  const field = props.field.toLowerCase();
+  const error = props.error;
+
+  console.log('rendering for:', field)
+  return (
+    <>
+      <TextInput value={props.value} style={commonStyles.textInput}
+        onBlur={() => props.onBlur(field)}
+        onChangeText={text => props.setText(field, text)} placeholder={props.field} />
+      {error &&
+        (<Text style={{color: 'red'}}>{error}</Text>)}
+    </>
+  )
+}
+
 const initialState = () => ({
   rating: 3,
   fields: {
@@ -89,6 +107,17 @@ const initialState = () => ({
     }
   }
 })
+
+const setError = (error, field) => (state, props) =>
+  ({
+    fields: {
+      ...state.fields,
+      [field]: {
+        ...state.fields[field],
+        error
+      }
+    }
+  })
 
 class DishDetail extends React.Component {
 
@@ -166,34 +195,14 @@ class DishDetail extends React.Component {
     console.log('validating', this.state.fields[field])
     if (!this.state.fields[field].value) {
       console.log('invalid, empty value: ', field)
-      this.setState((state, props) =>
-        ({
-          fields: {
-            ...state.fields,
-            [field]: {
-              ...state.fields[field],
-              error: 'Value for ' + field + ' is required.'
-            }
-          }
-        })
-      )
+      this.setState(setError('Value for ' + field + ' is required.', field))
 
       return false;
     } else {
 
       // if valid, remove error message
       if (this.state.fields[field].error) {
-        this.setState((state, props) =>
-          ({
-            fields: {
-              ...state.fields,
-              [field]: {
-                ...state.fields[field],
-                error: null
-              }
-            }
-          })
-        )
+        this.setState(setError(null, field))
       }
 
       return true;
@@ -211,14 +220,14 @@ class DishDetail extends React.Component {
       var ord = fields[a].order - fields[b].order;
       return ord > 0 ? 1 : -1
     }).map(p => {
-        console.log('create input: ', p)
-        field = fields[p];
-        return (
-          <ValidatedInput key={i++} field={field.name} onBlur={this.validate}
-              error={field.error} value={field.value} setText={this.setText}
-              />
-        )
-      });
+      console.log('create input: ', p)
+      field = fields[p];
+      return (
+        <ValidatedInput key={i++} field={field.name} onBlur={this.validate}
+            error={field.error} value={field.value} setText={this.setText}
+            />
+      )
+    });
     console.log(inputs.length)
 
     return (
@@ -258,21 +267,5 @@ class DishDetail extends React.Component {
 }
 
 
-const ValidatedInput = props => {
-
-  const field = props.field.toLowerCase();
-  const error = props.error;
-
-  console.log('rendering for:', field)
-  return (
-    <>
-      <TextInput value={props.value} style={commonStyles.textInput}
-        onBlur={() => props.onBlur(field)}
-        onChangeText={text => props.setText(field, text)} placeholder={props.field} />
-      {error &&
-        (<Text style={{color: 'red'}}>{error}</Text>)}
-    </>
-  )
-}
 
 export default connect(mapStateToProps, mapDispatchToProps)(DishDetail);
